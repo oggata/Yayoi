@@ -1,0 +1,36 @@
+{
+    "project_type": "javascript",
+
+    "debugMode" : 1,
+    "showFPS" : false,
+    "frameRate" : 30,
+    "id" : "gameCanvas",
+    "renderMode" : 0,
+    "engineDir":"frameworks/cocos2d-html5",
+    "modules" : ["cocos2d"],
+    "jsList" : [
+        "src/resource.js",
+        "src/Config/GameConfig.js",
+        "src/Layer/FarmLayer.js",
+        "src/Sprite/Gauge.js",
+        "src/Sprite/Item.js",
+        "src/Sprite/Human.js",
+        "src/Sprite/Icon.js",
+        "src/Sprite/MapChip.js",
+        "src/Util/Storage.js",
+        "src/UI/CutIn.js",
+        "src/UI/Header.js",
+        "src/UI/Shop.js",
+        "src/UI/Tutorial.js",
+        "src/UI/LevelManage.js",
+        "src/UI/Setting.js",
+        "src/UI/Footer.js",
+        "src/UI/Introduction.js",
+        "src/UI/InfoBuilding.js",
+        "src/UI/RemoveBuilding.js",
+        "src/UI/SetBuilding.js",
+        "src/Util/MapManager.js",
+        "src/Util/Button.js",
+        "src/Util/Sound.js"
+    ]
+}

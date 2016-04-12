@@ -1,0 +1,26 @@
+{
+    "android": {
+        "Share": {
+            "platforms": {
+                "Twitter": {
+                    "params": {
+                        "secret": "cGxIKBXNcxvNweDfbD65Az5POpgZIhAOynlUQDqIXlOhos5YFo", 
+                        "key": "hRmctlMNEIVpfMXZVVHVAjjCq"
+                    }
+                }
+            }
+        }
+    }, 
+    "ios": {
+        "Share": {
+            "platforms": {
+                "Twitter": {
+                    "params": {
+                        "secret": "cGxIKBXNcxvNweDfbD65Az5POpgZIhAOynlUQDqIXlOhos5YFo", 
+                        "key": "hRmctlMNEIVpfMXZVVHVAjjCq"
+                    }
+                }
+            }
+        }
+    }
+}
