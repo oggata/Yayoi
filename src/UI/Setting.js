@@ -84,7 +84,7 @@ var Setting = cc.Node.extend({
 
         }, this);
         closeButton.setAnchorPoint(0.5, 0.5);
-        closeButton.setPosition(320, 20);
+        closeButton.setPosition(320, -80);
         var resetMenu2 = new cc.Menu(
             closeButton
         );

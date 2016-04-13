@@ -74,16 +74,17 @@ var Introduction = cc.Node.extend({
             this.game.header.missionLabel.setString("邪馬台国の目標人数30人");
         }
         if (this.storage.tutorialNum == 7) {
-            this.game.header.missionLabel.setString("邪馬台国の目標人数50人");
+            this.game.header.missionLabel.setString("");
+            //this.game.header.missionLabel.setString("邪馬台国の目標人数50人");
         }
         if (this.storage.tutorialNum == 8) {
-            this.game.header.missionLabel.setString("邪馬台国の目標人数80人");
+            //this.game.header.missionLabel.setString("邪馬台国の目標人数80人");
         }
         if (this.storage.tutorialNum == 9) {
-            this.game.header.missionLabel.setString("");
+            //this.game.header.missionLabel.setString("");
         }
         if (this.storage.tutorialNum >= 10) {
-            this.game.header.missionLabel.setString("");
+            //this.game.header.missionLabel.setString("");
         }
 
         //tutorial 1
@@ -98,7 +99,7 @@ var Introduction = cc.Node.extend({
 
                 "それまでそなたの助けを借りたいと思っているが\n" + "この国に住む民のためにも、わらわのためにも\n" + "力を貸して欲しい.....\n" + "",
 
-                "さっそくだが、\n" + "いま、この地は、安定的に食料を得ることができず\n" + "民たちは、日々困っている.\n" + "水田を作ることができれば、\n食料を得ることができると思うのだが、\n" + "住民のために田を作って欲しい.",
+                "さっそくだが、\n" + "いま、この地は、安定して食料を得ることができず\n" + "民たちは、日々困っている.\n" + "田を作ることができれば、\n食料を得ることができると思うのだが、\n" + "住民のために田を作って欲しい.",
 
                 "右下の建物建築用のメニューから\n" + "「食料」のタブに入っている「田」を一つ選んで\n" + "住民が収穫しやすいように住居の近くに\n" + "設置してほしい.\n"
             ];
@@ -164,12 +165,13 @@ var Introduction = cc.Node.extend({
 
                 "まだ大国というには程遠い人数ではあるが、\n" + "最初の難関を突破し、もっとこの国を\n" + "成長させる段階に突入したといえよう.\n",
 
-                "次は住民の数が\n" + "50人を超えることが目標じゃ.\n" + "頼んだぞ.....\n"
+                "次の目標はもっともっとこの国を大きくしていくことじゃ.\n"
             ];
             this.game.mapManager.amount += 100;
         }
 
         if (this.game.storage.tutorialNum == 7 && this.messages.length == 0 && this.game.mapManager.population >= 50) {
+            this.game.header.missionLabel.setString("");
         }
 
         if (this.game.storage.tutorialNum == 8 && this.messages.length == 0 && this.game.mapManager.population >= 80) {

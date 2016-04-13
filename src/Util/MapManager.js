@@ -499,12 +499,12 @@ var MapManager = cc.Node.extend({
     },
 
     getTax: function() {
-        this.taxPerPeople = getRandNumberFromRange(5, 10);
-        if (this.population <= 10) {
-            this.taxPerPeople = 15;
-        }
+        this.taxPerPeople = getRandNumberFromRange(4, 8);
         if (this.population <= 20) {
             this.taxPerPeople = 12;
+        }
+        if (this.population <= 10) {
+            this.taxPerPeople = 15;
         }
         var _amount = this.population * this.taxPerPeople;
         return {

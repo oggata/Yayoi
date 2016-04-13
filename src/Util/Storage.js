@@ -85,10 +85,10 @@ var Storage = cc.Class.extend(
 
         this.itemLibraries = [
             {"id":"f_i001_lv1_a90","lv":1,"name" :"雑穀畑(アワ)",    "description":"食料+5","item":"res/f_001.png","map_chip":"res/f_i001_lv1_a90.png","food":5,  "maxFood":0, "house":0,  "safe":0, "cost":5, "amount":50 ,"maxAmount" : 0},
-            {"id":"f_i002_lv1_a90","lv":1,"name" :"雑穀畑(ヒエ)",    "description":"食料+10","item":"res/f_002.png","map_chip":"res/f_i002_lv1_a90.png","food":10,  "maxFood":0, "house":0,  "safe":0, "cost":10, "amount":100 ,"maxAmount" : 0},
-            {"id":"f_i003_lv1_a90","lv":1,"name" :"水田(イネ)",      "description":"食料+20","item":"res/f_003.png","map_chip":"res/f_i003_lv1_a90.png","food":20,  "maxFood":0, "house":0,  "safe":0, "cost":20, "amount":200 ,"maxAmount" : 0},
+            {"id":"f_i002_lv1_a90","lv":1,"name" :"雑穀畑(ヒエ)",    "description":"食料+5","item":"res/f_002.png","map_chip":"res/f_i002_lv1_a90.png","food":5,  "maxFood":0, "house":0,  "safe":0, "cost":5, "amount":50 ,"maxAmount" : 0},
+            {"id":"f_i003_lv1_a90","lv":1,"name" :"水田(イネ)",      "description":"食料+5","item":"res/f_003.png","map_chip":"res/f_i003_lv1_a90.png","food":5,  "maxFood":0, "house":0,  "safe":0, "cost":5, "amount":50 ,"maxAmount" : 0},
             {"id":"f_i004_lv1_a90","lv":1,"name" :"高床式倉庫A",     "description":"備蓄+10","item":"res/f_004.png","map_chip":"res/f_i004_lv1_a90.png","food":0,  "maxFood":10, "house":0,  "safe":0, "cost":10, "amount":100 ,"maxAmount" : 0},
-            {"id":"f_i005_lv1_a90","lv":1,"name" :"高床式倉庫B",     "description":"備蓄+50","item":"res/f_005.png","map_chip":"res/f_i005_lv1_a90.png","food":0,  "maxFood":30, "house":0,  "safe":0, "cost":30, "amount":300 ,"maxAmount" : 0},
+            {"id":"f_i005_lv1_a90","lv":1,"name" :"高床式倉庫B",     "description":"備蓄+30","item":"res/f_005.png","map_chip":"res/f_i005_lv1_a90.png","food":0,  "maxFood":30, "house":0,  "safe":0, "cost":30, "amount":300 ,"maxAmount" : 0},
             {"id":"f_i006_lv1_a90","lv":1,"name" :"",               "description":"備蓄+100","item":"res/f_006.png","map_chip":"res/f_i006_lv1_a90.png","food":0,  "maxFood":100, "house":0,  "safe":0, "cost":100, "amount":1000 ,"maxAmount" : 0},
             {"id":"f_i007_lv1_a90","lv":1,"name" :"",               "description":"","item":"res/f_007.png","map_chip":"res/f_i007_lv1_a90.png","food":0,  "maxFood":0, "house":0,  "safe":0, "cost":5, "amount":100 ,"maxAmount" : 0,"maxAmount" : 0},
             {"id":"f_i008_lv1_a90","lv":1,"name" :"",               "description":"","item":"res/f_008.png","map_chip":"res/f_i008_lv1_a90.png","food":0,  "maxFood":0, "house":0,  "safe":0, "cost":5, "amount":100 ,"maxAmount" : 0,"maxAmount" : 0},
