@@ -14,7 +14,7 @@ var Shop = cc.Node.extend({
 
         this.selectedItemId = null;
 
-        this.pos_f = ["f_i001_lv1_a90", "f_i002_lv1_a90", "f_i003_lv1_a90", "f_i004_lv1_a90", "f_i005_lv1_a90", null, null, null, null];
+        this.pos_f = ["f_i001_lv1_a90", null, null, "f_i004_lv1_a90", "f_i005_lv1_a90", null, null, null, null];
         this.pos_h = ["h_i001_lv1_a90", "h_i002_lv1_a90", "h_i003_lv1_a90", null, null, null, null, null, null];
         this.pos_s = ["s_i001_lv1_a90", "s_i002_lv1_a90", "s_i003_lv1_a90", null, null, null, null, null, null];
 

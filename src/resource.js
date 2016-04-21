@@ -12,6 +12,7 @@ var res = {
     Setting_Button_Scale_002_png : "res/scale_minus_button.png",
     Animal_001_png : "res/chara004.png",
     Animal_002_png : "res/chara005.png",
+    Animal_003_png : "res/chara006.png",
     Message_png : "res/message.png",
     Ok_Button_png : "res/ok_button.png",
     Setting_Menu_Button_001_png : "res/setting_menu_button_001.png",
@@ -61,6 +62,13 @@ var res = {
     Credit_png : "res/credit.png",
     Button_Credit_png : "res/button_credit.png",
     Button_Close_png : "res/button_close.png",
+    Population_Button_png : "res/population_button.png",
+    Population_Button_On_png : "res/population_button_on.png",
+    Effect_Enemy_png : "res/flame3.png",
+    Effect_Money_png : "res/pipo-btleffect142.png",
+    Effect_Hart_png : "res/pipo-btleffect019.png",
+    Unuse_Sprite_png : "res/population_ng_button.png",
+    Attack_Window_png : "res/attack_window.png",
 };
 
 var g_resources = [];

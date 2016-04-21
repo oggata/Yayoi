@@ -34,7 +34,7 @@ var SetBuilding = cc.Node.extend({
             this.setVisible(false);
             playSE002_Button();
         }, this);
-        okButton.setPosition(-170 + 170 / 2, 70);
+        okButton.setPosition(-170 + 170 / 2, 50);
 
         var ngButton = new cc.MenuItemImage(res.Build_Ng_Button, res.Build_Ng_Button, function() {
             this.game.targetOkSprite.setVisible(false);
@@ -44,14 +44,14 @@ var SetBuilding = cc.Node.extend({
             this.game.isReadyToRenderMap = true;
             this.setVisible(false);
         }, this);
-        ngButton.setPosition(0 + 170 / 2, 70);
+        ngButton.setPosition(0 + 170 / 2, 50);
 
         this.messageLabel = cc.LabelTTF.create("", "Arial", 28);
         this.messageLabel.setFontFillColor(new cc.Color(0, 0, 0, 255));
         this.messageLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
         this.messageLabel.setAnchorPoint(0.5, 0.5);
         this.base.addChild(this.messageLabel);
-        this.messageLabel.setPosition(280, 200);
+        this.messageLabel.setPosition(280, 140);
 
         var menu022 = new cc.Menu(okButton, ngButton);
         menu022.setPosition(0, 0);

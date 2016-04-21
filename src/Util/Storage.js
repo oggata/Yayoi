@@ -84,31 +84,31 @@ var Storage = cc.Class.extend(
         ];
 
         this.itemLibraries = [
-            {"id":"f_i001_lv1_a90","lv":1,"name" :"雑穀畑(アワ)",    "description":"食料+5","item":"res/f_001.png","map_chip":"res/f_i001_lv1_a90.png","food":5,  "maxFood":0, "house":0,  "safe":0, "cost":5, "amount":50 ,"maxAmount" : 0},
-            {"id":"f_i002_lv1_a90","lv":1,"name" :"雑穀畑(ヒエ)",    "description":"食料+5","item":"res/f_002.png","map_chip":"res/f_i002_lv1_a90.png","food":5,  "maxFood":0, "house":0,  "safe":0, "cost":5, "amount":50 ,"maxAmount" : 0},
-            {"id":"f_i003_lv1_a90","lv":1,"name" :"水田(イネ)",      "description":"食料+5","item":"res/f_003.png","map_chip":"res/f_i003_lv1_a90.png","food":5,  "maxFood":0, "house":0,  "safe":0, "cost":5, "amount":50 ,"maxAmount" : 0},
-            {"id":"f_i004_lv1_a90","lv":1,"name" :"高床式倉庫A",     "description":"備蓄+10","item":"res/f_004.png","map_chip":"res/f_i004_lv1_a90.png","food":0,  "maxFood":10, "house":0,  "safe":0, "cost":10, "amount":100 ,"maxAmount" : 0},
-            {"id":"f_i005_lv1_a90","lv":1,"name" :"高床式倉庫B",     "description":"備蓄+30","item":"res/f_005.png","map_chip":"res/f_i005_lv1_a90.png","food":0,  "maxFood":30, "house":0,  "safe":0, "cost":30, "amount":300 ,"maxAmount" : 0},
-            {"id":"f_i006_lv1_a90","lv":1,"name" :"",               "description":"備蓄+100","item":"res/f_006.png","map_chip":"res/f_i006_lv1_a90.png","food":0,  "maxFood":100, "house":0,  "safe":0, "cost":100, "amount":1000 ,"maxAmount" : 0},
-            {"id":"f_i007_lv1_a90","lv":1,"name" :"",               "description":"","item":"res/f_007.png","map_chip":"res/f_i007_lv1_a90.png","food":0,  "maxFood":0, "house":0,  "safe":0, "cost":5, "amount":100 ,"maxAmount" : 0,"maxAmount" : 0},
-            {"id":"f_i008_lv1_a90","lv":1,"name" :"",               "description":"","item":"res/f_008.png","map_chip":"res/f_i008_lv1_a90.png","food":0,  "maxFood":0, "house":0,  "safe":0, "cost":5, "amount":100 ,"maxAmount" : 0,"maxAmount" : 0},
-            {"id":"f_i009_lv1_a90","lv":1,"name" :"",               "description":"","item":"res/f_009.png","map_chip":"res/f_i009_lv1_a90.png","food":0,  "maxFood":0, "house":0,  "safe":0, "cost":5, "amount":100 ,"maxAmount" : 0,"maxAmount" : 0},
+            {"id":"f_i001_lv1_a90","lv":1,"name" :"雑穀畑(アワ)",    "description":"食料+1","item":"res/f_001.png","map_chip":"res/f_i001_lv1_a90.png","food":1,  "maxFood":0, "house":0,  "safe":0, "amount":50 ,"maxAmount" : 0},
+            {"id":"f_i002_lv1_a90","lv":1,"name" :"雑穀畑(ヒエ)",    "description":"食料+1","item":"res/f_002.png","map_chip":"res/f_i002_lv1_a90.png","food":1,  "maxFood":0, "house":0,  "safe":0, "amount":50 ,"maxAmount" : 0},
+            {"id":"f_i003_lv1_a90","lv":1,"name" :"水田(イネ)",      "description":"食料+1","item":"res/f_003.png","map_chip":"res/f_i003_lv1_a90.png","food":1,  "maxFood":0, "house":0,  "safe":0, "amount":50 ,"maxAmount" : 0},
+            {"id":"f_i004_lv1_a90","lv":1,"name" :"高床式倉庫A",     "description":"備蓄+10","item":"res/f_004.png","map_chip":"res/f_i004_lv1_a90.png","food":0,  "maxFood":10, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0},
+            {"id":"f_i005_lv1_a90","lv":1,"name" :"高床式倉庫B",     "description":"備蓄+30","item":"res/f_005.png","map_chip":"res/f_i005_lv1_a90.png","food":0,  "maxFood":30, "house":0,  "safe":0, "amount":300 ,"maxAmount" : 0},
+            {"id":"f_i006_lv1_a90","lv":1,"name" :"",               "description":"備蓄+100","item":"res/f_006.png","map_chip":"res/f_i006_lv1_a90.png","food":0,  "maxFood":100, "house":0,  "safe":0, "amount":1000 ,"maxAmount" : 0},
+            {"id":"f_i007_lv1_a90","lv":1,"name" :"",               "description":"","item":"res/f_007.png","map_chip":"res/f_i007_lv1_a90.png","food":0,  "maxFood":0, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0,"maxAmount" : 0},
+            {"id":"f_i008_lv1_a90","lv":1,"name" :"",               "description":"","item":"res/f_008.png","map_chip":"res/f_i008_lv1_a90.png","food":0,  "maxFood":0, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0,"maxAmount" : 0},
+            {"id":"f_i009_lv1_a90","lv":1,"name" :"",               "description":"","item":"res/f_009.png","map_chip":"res/f_i009_lv1_a90.png","food":0,  "maxFood":0, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0,"maxAmount" : 0},
            
-            {"id":"h_i001_lv1_a90","lv":1,"name" :"住居A",          "description":"住居+10人 備蓄+2","item":"res/h_001.png","map_chip":"res/h_i001_lv1_a90.png","food":0, "maxFood":2,  "house":10,  "safe":0, "cost":10, "amount":100,"maxAmount" : 0},
-            {"id":"h_i002_lv1_a90","lv":1,"name" :"住居B",          "description":"住居+20人 備蓄+4","item":"res/h_002.png","map_chip":"res/h_i002_lv1_a90.png","food":0, "maxFood":4,  "house":20,  "safe":0, "cost":20, "amount":200,"maxAmount" : 0},
-            {"id":"h_i003_lv1_a90","lv":1,"name" :"住居C",          "description":"住居+30人 備蓄+6","item":"res/h_003.png","map_chip":"res/h_i003_lv1_a90.png","food":0, "maxFood":6,  "house":30,  "safe":0, "cost":30, "amount":300,"maxAmount" : 0},
-            {"id":"h_i004_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_004.png","map_chip":"res/h_i004_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "cost":5, "amount":100,"maxAmount" : 0},
-            {"id":"h_i005_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_005.png","map_chip":"res/h_i005_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "cost":5, "amount":100,"maxAmount" : 0},
-            {"id":"h_i006_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_006.png","map_chip":"res/h_i006_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "cost":5, "amount":100,"maxAmount" : 0},
-            {"id":"h_i007_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_007.png","map_chip":"res/h_i007_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "cost":5, "amount":100,"maxAmount" : 0},
-            {"id":"h_i008_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_008.png","map_chip":"res/h_i008_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "cost":5, "amount":100,"maxAmount" : 0},
-            {"id":"h_i009_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_009.png","map_chip":"res/h_i009_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "cost":5, "amount":100,"maxAmount" : 0},
+            {"id":"h_i001_lv1_a90","lv":1,"name" :"住居A",          "description":"住居+10人 備蓄+5","item":"res/h_001.png","map_chip":"res/h_i001_lv1_a90.png","food":0, "maxFood":5,  "house":10,  "safe":0, "amount":100,"maxAmount" : 0},
+            {"id":"h_i002_lv1_a90","lv":1,"name" :"住居B",          "description":"住居+20人 備蓄+10","item":"res/h_002.png","map_chip":"res/h_i002_lv1_a90.png","food":0, "maxFood":10,  "house":20,  "safe":0, "amount":200,"maxAmount" : 0},
+            {"id":"h_i003_lv1_a90","lv":1,"name" :"住居C",          "description":"住居+30人 備蓄+15","item":"res/h_003.png","map_chip":"res/h_i003_lv1_a90.png","food":0, "maxFood":15,  "house":30,  "safe":0, "amount":300,"maxAmount" : 0},
+            {"id":"h_i004_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_004.png","map_chip":"res/h_i004_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
+            {"id":"h_i005_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_005.png","map_chip":"res/h_i005_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
+            {"id":"h_i006_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_006.png","map_chip":"res/h_i006_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
+            {"id":"h_i007_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_007.png","map_chip":"res/h_i007_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
+            {"id":"h_i008_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_008.png","map_chip":"res/h_i008_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
+            {"id":"h_i009_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_009.png","map_chip":"res/h_i009_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
             
-            {"id":"s_i001_lv1_a90","lv":1,"name" :"警備用建物",      "description":"治安+10","item":"res/s_001.png","map_chip":"res/s_i001_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":10, "cost":10, "amount":100,"maxAmount" : 0},
-            {"id":"s_i002_lv1_a90","lv":1,"name" :"ものみやぐらA",   "description":"治安+20","item":"res/s_002.png","map_chip":"res/s_i002_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":20, "cost":20, "amount":200,"maxAmount" : 0},
-            {"id":"s_i003_lv1_a90","lv":1,"name" :"ものみやぐらB",   "description":"治安+30","item":"res/s_003.png","map_chip":"res/s_i003_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":30, "cost":30, "amount":300,"maxAmount" : 0},
-            {"id":"s_i004_lv1_a90","lv":1,"name" :"ものみやぐらB",   "description":"治安+30","item":"res/s_004.png","map_chip":"res/s_i004_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":0, "cost":0, "amount":300,"maxAmount" : 0},
-            {"id":"s_i005_lv1_a90","lv":1,"name" :"","description":"","item":"res/s_005.png","map_chip":"res/s_i001_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":0, "cost":5, "amount":100,"maxAmount" : 0},
+            {"id":"s_i001_lv1_a90","lv":1,"name" :"警備用建物",      "description":"治安+10","item":"res/s_001.png","map_chip":"res/s_i001_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":10, "amount":100,"maxAmount" : 0},
+            {"id":"s_i002_lv1_a90","lv":1,"name" :"ものみやぐらA",   "description":"治安+20","item":"res/s_002.png","map_chip":"res/s_i002_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":20, "amount":200,"maxAmount" : 0},
+            {"id":"s_i003_lv1_a90","lv":1,"name" :"ものみやぐらB",   "description":"治安+30","item":"res/s_003.png","map_chip":"res/s_i003_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":30, "amount":300,"maxAmount" : 0},
+            {"id":"s_i004_lv1_a90","lv":1,"name" :"ものみやぐらB",   "description":"治安+30","item":"res/s_004.png","map_chip":"res/s_i004_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":0, "amount":300,"maxAmount" : 0},
+            {"id":"s_i005_lv1_a90","lv":1,"name" :"","description":"","item":"res/s_005.png","map_chip":"res/s_i001_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":0, "amount":100,"maxAmount" : 0},
             {"id":"s_i006_lv1_a90","lv":1,"name" :"","description":"","item":"res/s_006.png","map_chip":"res/s_i001_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":0, "cost":5, "amount":100,"maxAmount" : 0},
             {"id":"s_i007_lv1_a90","lv":1,"name" :"","description":"","item":"res/s_007.png","map_chip":"res/s_i001_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":0, "cost":5, "amount":100,"maxAmount" : 0},
             {"id":"s_i008_lv1_a90","lv":1,"name" :"","description":"","item":"res/s_008.png","map_chip":"res/s_i001_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":0, "cost":5, "amount":100,"maxAmount" : 0},
@@ -1075,7 +1075,6 @@ var Storage = cc.Class.extend(
     {
         var _oldMapData = this.mapData;
         this.mapData.splice(position,1,number);
-cc.log(this.mapData.length);
         if(this.mapData == null)
         {
             this.mapData = _oldMapData;
@@ -1084,9 +1083,9 @@ cc.log(this.mapData.length);
             //ロールバックする
             this.mapData = _oldMapData;
         }else{
-            //this.saveCurrentData();
+            this.saveCurrentData();
         }
-        this.saveCurrentData();
+        //this.saveCurrentData();
     },
 
     getDataFromStorage : function ()

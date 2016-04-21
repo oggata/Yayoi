@@ -5,9 +5,6 @@
 //  Created by Fumitoshi Ogata on 01/02/16.
 //  Copyright (c) 2016 http://oggata.github.io All rights reserved.
 //
-/*
-        瑞穂の国の伝説」 卑弥呼
-*/
 
 var FarmLayer = cc.Layer.extend({
     ctor: function(storage) {
@@ -68,16 +65,17 @@ var FarmLayer = cc.Layer.extend({
 
         this.mapChips = [];
         this.items = [];
+        this.enemies = [];
         this.humans = [];
+        this.effects = [];
+        this.warriorCount = 0;
 
-        //header
         this.header = new Header(this);
         this.header.setPosition(320, this.viewSize.height - 80);
         this.header.setAnchorPoint(0.5, 0);
         this.addChild(this.header, 9999999);
 
         this.mapManager = new MapManager(this);
-        //this.isReadyToRenderMap = true;
         this.mapManager.renderWorld();
 
         //経過時間の少数だけを取る
@@ -91,7 +89,6 @@ var FarmLayer = cc.Layer.extend({
 
         this.cycleTimeRate = _pastTimeRate; //30 * CONFIG.CYCLE_SECOND
         this.cycleTime = 30 * CONFIG.CYCLE_SECOND * _pastTimeRate;
-
         this.mapManager.setPositionByMapChip(421);
 
         //GetTouchEvent
@@ -110,6 +107,19 @@ var FarmLayer = cc.Layer.extend({
             }
         }), this);
 
+        this.lastTouchGameLayerX = this.baseNode.getPosition().x;
+        this.lastTouchGameLayerY = this.baseNode.getPosition().y;
+
+        this.setUI();
+
+        //this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(1,3));
+        this.mapManager.renderItems(0, 0, 0, 15);
+
+        this.scheduleUpdate();
+        return true;
+    },
+
+    setUI: function() {
         //カットインを作成
         this.cutIn = new CutIn(this);
         this.addChild(this.cutIn);
@@ -136,8 +146,9 @@ var FarmLayer = cc.Layer.extend({
         this.footer = new Footer(this);
         this.addChild(this.footer);
 
-        this.lastTouchGameLayerX = this.baseNode.getPosition().x;
-        this.lastTouchGameLayerY = this.baseNode.getPosition().y;
+        this.attackWindow = new Attack(this);
+        this.baseNode.addChild(this.attackWindow, 9999999);
+        this.attackWindow.setPosition(320, 250);
 
         this.resetWindow = new RemoveBuilding(this);
         this.addChild(this.resetWindow);
@@ -150,8 +161,6 @@ var FarmLayer = cc.Layer.extend({
         this.buildingInfo = new InfoBuilding();
         this.addChild(this.buildingInfo);
         this.buildingInfo.setVisible(false);
-
-        this.mapManager.renderItems(1, 0, 0, 1);
 
         this.targetItem = cc.Sprite.create(res.Map_Target_Ok_png);
         this.targetItem.retain();
@@ -181,9 +190,6 @@ var FarmLayer = cc.Layer.extend({
         this.introduction = new Introduction(this);
         this.addChild(this.introduction);
         this.introduction.setVisible(false);
-
-        this.scheduleUpdate();
-        return true;
     },
 
     getItemFromLibrary: function(itemId) {
@@ -227,10 +233,22 @@ var FarmLayer = cc.Layer.extend({
                 this.targetItem.setPosition(_x, _y);
                 this.mapInfoSprite.setPosition(_x, _y + 200);
 
+                var _chkMapId = this.mapChips[i].mapId;
+                this.attackWindow.enemy = null;
+                this.attackWindow.mapId = null;
+                for (var n = 0; n < this.enemies.length; n++) {
+                    if (_chkMapId == this.enemies[n].mapId) {
+                        this.attackWindow.enemy = this.enemies[n];
+                        this.attackWindow.setVisible(true);
+                        this.attackWindow.mapId = this.enemies[n].mapId;
+                    }
+                }
+                this.attackWindow.update();
+
                 if (this.mapChips[i].itemData != null) {
                     var _txt = this.mapChips[i].itemData["name"];
                     _txt += "\n" + this.mapChips[i].itemData["description"];
-                    _txt += "\nコスト：" + this.mapChips[i].itemData["cost"];
+                    //_txt += "\nコスト：" + this.mapChips[i].itemData["cost"];
                     this.mapInfo.setString(_txt);
                     this.mapInfoSprite.setVisible(true);
                 } else {
@@ -323,7 +341,6 @@ var FarmLayer = cc.Layer.extend({
     },
 
     update: function(dt) {
-
         if (this.isReadyToRenderMap == true) {
             this.isReadyToRenderMap = false;
             this.mapManager.renderWorld();
@@ -340,6 +357,8 @@ var FarmLayer = cc.Layer.extend({
 
         this.resetWindow.update();
 
+        this.footer.update();
+
         if (this.hasItemData != null || this.shop.selectedItemId != null) {
             this.buildingInfo.setVisible(true);
         } else {
@@ -350,26 +369,29 @@ var FarmLayer = cc.Layer.extend({
         this.cycleTimeByTerm += 1;
 
         this.cycleTimeRate = (this.cycleTime / (30 * CONFIG.CYCLE_SECOND));
-        //サイクルを30で割った数だけ、影響を与える
-        if (this.cycleTimeByTerm >= 30 * (CONFIG.CYCLE_SECOND / 10)) {
+        //サイクルを5で割った数だけ、影響を与える
+        if (this.cycleTimeByTerm >= 30 * (CONFIG.CYCLE_SECOND / 5)) {
             this.cycleTimeByTerm = 0;
-            var _spendCosts = this.mapManager.getSpendCosts();
-            this.mapManager.food -= floatFormat(_spendCosts["food"] / 30, 2);
-            this.mapManager.renderGauge();
+            if (this.mapManager.waitPopulation >= 1) {
+                this.mapManager.waitPopulation -= 1;
+                this.mapManager.population += 1;
+                this.footer.populationLabel.setString(this.mapManager.waitPopulation);
 
-            //foodが0以下だったら誰か死ぬ
-            if (this.mapManager.food <= 0 && this.population >= 5) {
-                var _rand = getRandNumberFromRange(1, this.humans.length);
-                this.humans[_rand].deadCnt = 1;
-                this.mapManager.setPositionByMapChip(this.humans[_rand].targetMarker.mapId);
+
+                var _housePosArray = this.mapManager.housePositions;
+                var shuffle = function() {
+                    return Math.random() - .5
+                };
+                _housePosArray.sort(shuffle)
+                this.addEffectByMapChip(_housePosArray[0].mapId, "hart");
+            } else {
+                this.footer.populationLabel.setString(this.mapManager.waitPopulation);
             }
         }
 
         //サイクル毎(1月)に結果を算出する
         if (this.cycleTime >= 30 * CONFIG.CYCLE_SECOND) {
             this.cycleTime = 0;
-            this.mapManager.foodDonePositions = [];
-            //this.mapManager.renderWorld();
             this.isReadyToRenderMap = true;
             this.mapManager.calcPastTime1(1, "gaming");
         }
@@ -397,14 +419,39 @@ var FarmLayer = cc.Layer.extend({
                 }
                 this.baseNode.removeChild(this.humans[i]);
                 this.humans.splice(i, 1);
+            } else {
+                this.baseNode.reorderChild(
+                    this.humans[i],
+                    Math.floor(999999 - this.humans[i].getPosition().y + 108)
+                );
             }
         }
 
-        for (var i = 0; i < this.humans.length; i++) {
-            this.baseNode.reorderChild(
-                this.humans[i],
-                Math.floor(999999 - this.humans[i].getPosition().y + 108)
-            );
+        for (var i = 0; i < this.effects.length; i++) {
+            if (this.effects[i].update() == false) {
+                this.baseNode.removeChild(this.effects[i]);
+                this.effects.splice(i, 1);
+            } else {
+                this.baseNode.reorderChild(
+                    this.effects[i],
+                    Math.floor(999999 - this.effects[i].getPosition().y + 108)
+                );
+            }
+        }
+
+        for (var i = 0; i < this.enemies.length; i++) {
+            if (this.enemies[i].update() == false) {
+                this.mapManager.killedEnemyCount+=1;
+                this.mapManager.amount += this.enemies[i].reward;
+                this.addEffectByMapChip(this.enemies[i].mapId, "moeny");
+                this.baseNode.removeChild(this.enemies[i]);
+                this.enemies.splice(i, 1);
+            } else {
+                this.baseNode.reorderChild(
+                    this.enemies[i],
+                    Math.floor(999999 - this.enemies[i].getPosition().y + 108)
+                );
+            }
         }
 
         for (var i = 0; i < this.mapChips.length; i++) {
@@ -424,13 +471,14 @@ var FarmLayer = cc.Layer.extend({
             );
         }
 
+        //人 x 人
         for (var m = 0; m < this.humans.length; m++) {
             for (var n = 0; n < this.humans.length; n++) {
                 if (this.humans[m] != this.humans[n]) {
                     var dX = this.humans[m].getPosition().x - this.humans[n].getPosition().x;
                     var dY = this.humans[m].getPosition().y - this.humans[n].getPosition().y;
                     var dist = Math.sqrt(dX * dX + dY * dY);
-                    if (dist <= 3) {
+                    if (dist <= 12) {
                         this.humans[m].setPosition(this.humans[m].getPosition().x + dX / 5, this.humans[m].getPosition().y + dY / 5);
                         this.humans[n].setPosition(this.humans[n].getPosition().x - dX / 5, this.humans[n].getPosition().y - dY / 5);
                     }
@@ -438,50 +486,66 @@ var FarmLayer = cc.Layer.extend({
             }
         }
 
+        //人 x 敵
+        this.warriorCount = 0;
         for (var m = 0; m < this.humans.length; m++) {
-            for (var n = 0; n < this.items.length; n++) {
-                if (this.humans[m] != this.items[n]) {
-                    if (this.humans[m]) {
-                        var dX = this.humans[m].getPosition().x - this.items[n].getPosition().x;
-                        var dY = this.humans[m].getPosition().y - this.items[n].getPosition().y;
-                        var dist = Math.sqrt(dX * dX + dY * dY);
-                        if (dist <= 50) {
-                            var _itemId = this.items[n].itemId;
-                            if (_itemId == "money") {
-                                //お金
-                                this.mapManager.amount += CONFIG.ITEM_MONEY_AMOUNT;
-                                this.humans[m].setEmotion("got_money");
-                                this.baseNode.removeChild(this.items[n]);
-                                this.items.splice(n, 1);
-                            } else if (_itemId == "food") {
-                                //食べ物
-                                this.mapManager.food += CONFIG.ITEM_FOOD_AMOUNT;
-                                this.humans[m].setEmotion("got_food2");
-                                this.baseNode.removeChild(this.items[n]);
-                                this.items.splice(n, 1);
-                            } else if (_itemId == "doki") {
-                                //土器
-                                this.mapManager.doki += CONFIG.ITEM_DOKI_AMOUNT;
-                                this.humans[m].setEmotion("got_doki");
-                                this.baseNode.removeChild(this.items[n]);
-                                this.items.splice(n, 1);
-                            } else if (_itemId == "ill") {
-                                //病気
-                                this.humans[m].setEmotion("got_ill");
-                                this.baseNode.removeChild(this.items[n]);
-                                this.items.splice(n, 1);
-                                //一定の確率で死ぬ
-                                var _rand = getRandNumberFromRange(1, 100);
-                                if (1 <= _rand && _rand <= this.mapManager.safeRate * 100) {} else {
-                                    this.humans[m].deadCnt = 1;
-                                    this.mapManager.setPositionByMapChip(this.humans[m].targetMarker.mapId);
-                                }
+            if (this.humans[m].type == 2) {
+                this.warriorCount += 1;
+            }
+            for (var n = 0; n < this.enemies.length; n++) {
+                var dX = this.humans[m].getPosition().x - this.enemies[n].getPosition().x;
+                var dY = this.humans[m].getPosition().y - this.enemies[n].getPosition().y;
+                var dist = Math.sqrt(dX * dX + dY * dY);
+                if (dist <= 50) {
+                    this.humans[m].stopCount = 1;
+                    if (this.humans[m].type == 1) {
+                        this.humans[m].setEmotion("got_ill");
+                        if (this.humans[m].deadCnt == 0) {
+                            this.humans[m].deadCnt = 1;
+                            this.mapManager.setPositionByMapChip(this.humans[m].targetMarker.mapId);
+                            this.mapManager.killedPopulationCount+=1;
+                        }
+                    } else {
+                        this.humans[m].stopCount = 1;
+                        this.enemies[n].hp -= 1;
+                    }
+                }
+            }
+        }
+
+        //人 x 食料
+        for (var m = 0; m < this.humans.length; m++) {
+            for (var n = 0; n < this.mapChips.length; n++) {
+                var dX = this.humans[m].getPosition().x - this.mapChips[n].getPosition().x;
+                var dY = this.humans[m].getPosition().y - (this.mapChips[n].getPosition().y + 70);
+                var dist = Math.sqrt(dX * dX + dY * dY);
+                if (dist <= 30 && this.humans[m].type == 1) {
+                    if (this.mapChips[n].itemData) {
+                        if (this.mapChips[n].itemData["food"] > 0 && this.mapChips[n].isFoodAvailable == true) {
+                            this.humans[m].stopCount = 1;
+                            this.mapChips[n].foodCount += 1;
+                            if (this.mapChips[n].foodCount >= 100) {
+                                this.mapManager.food += this.mapChips[n].itemData["food"];
+                                this.mapChips[n].isFoodAvailable = false;
+                                this.mapManager.gotFoodCount += 1;
                             }
                         }
                     }
                 }
             }
         }
+
+        //いまisFoodAvailable=trueのものだけ配列にいれて管理する
+        this.mapManager.foodAvailableList = [];
+        for (var n = 0; n < this.mapChips.length; n++) {
+            if(this.mapChips[n].itemData){
+                if(this.mapChips[n].isFoodAvailable == true && this.mapChips[n].itemData["food"] > 0)
+                {
+                    this.mapManager.foodAvailableList.push(this.mapChips[n]);
+                }
+            }
+        }
+
         this.mapManager.renderGauge();
         this.cutIn.update();
     },
@@ -491,11 +555,28 @@ var FarmLayer = cc.Layer.extend({
         var pos = this.mapChips[mapId - 1];
         var _x = pos["x"];
         var _y = pos["y"] + 108 / 2;
-        this.human = new Human(this);
+        this.human = new Human(this, 1);
         this.human.retain();
         this.baseNode.addChild(this.human, 999);
         this.human.setPosition(_x, _y);
         this.human.route = this.mapManager.getRouteIds(mapId, 3);
+        this.humans.push(this.human);
+        this.mapManager.increasePopulationCount+=1;
+    },
+
+    addWarriorByMapChip: function(mapId, distonationMapId, time) {
+        if (!this.mapChips[mapId - 1]) return;
+        var pos = this.mapChips[mapId - 1];
+        var _x = pos["x"];
+        var _y = pos["y"] + 108 / 2;
+        this.human = new Human(this, 2);
+        this.human.retain();
+        this.baseNode.addChild(this.human, 999);
+        this.human.setPosition(_x, _y);
+        this.human.route = this.mapManager.getRouteIdsFromTwoPosition(
+            mapId, distonationMapId, 10
+        );
+        this.human.startMaxTime = time;
         this.humans.push(this.human);
     },
 
@@ -506,6 +587,7 @@ var FarmLayer = cc.Layer.extend({
             var _x = pos["x"];
             var _y = pos["y"] + 108 / 2 + 25;
             this.item = new Item(this, itemId);
+            this.item.mapId = mapId;
             this.item.retain();
             this.baseNode.addChild(this.item, 99999999);
             this.item.setPosition(_x, _y);
@@ -514,8 +596,34 @@ var FarmLayer = cc.Layer.extend({
         }
     },
 
-    getFood: function() {
-        return this.mapManager.food;
+    addEnemyByMapChip: function(mapId, enemyId) {
+        if (!this.mapChips[mapId - 1]) return;
+        var pos = this.mapChips[mapId - 1];
+        if (pos) {
+            var _x = pos["x"];
+            var _y = pos["y"] + 108 / 2 + 25;
+            this.enemy = new Enemy(this, enemyId);
+            this.enemy.mapId = mapId;
+            this.enemy.retain();
+            this.baseNode.addChild(this.enemy, 99999999);
+            this.enemy.setPosition(_x, _y);
+            this.enemies.push(this.enemy);
+        }
+    },
+
+    addEffectByMapChip: function(mapId, effectId) {
+        if (!this.mapChips[mapId - 1]) return;
+        var pos = this.mapChips[mapId - 1];
+        if (pos) {
+            var _x = pos["x"];
+            var _y = pos["y"] + 108 / 2 + 25;
+            this.effect = new Effect(this, effectId);
+            this.effect.mapId = mapId;
+            this.effect.retain();
+            this.baseNode.addChild(this.effect, 99999999);
+            this.effect.setPosition(_x, _y);
+            this.effects.push(this.effect);
+        }
     },
 
     //シーンの切り替え----->
@@ -533,6 +641,15 @@ FarmLayer.create = function(storage) {
 var getRandNumberFromRange = function(min, max) {
     var rand = min + Math.floor(Math.random() * (max - min));
     return rand;
+};
+
+String.prototype.format = function() {
+    var formatted = this;
+    for (var i = 0; i < arguments.length; i++) {
+        var regexp = new RegExp('\\{'+i+'\\}', 'gi');
+        formatted = formatted.replace(regexp, arguments[i]);
+    }
+    return formatted;
 };
 
 var floatFormat = function(number, n) {

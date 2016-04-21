@@ -59,6 +59,30 @@ var Footer = cc.Node.extend({
         button002.setAnchorPoint(0, 0);
         button002.setPosition(80, 10);
 
+        var button003 = new cc.MenuItemImage(res.Population_Button_png, res.Population_Button_On_png, function() {
+            if (this.game.setBuilding.isVisible() == true) return;
+            playSE_Button(this.game.storage);
+            if(this.game.mapManager.food >= CONFIG.FOOD_AMOUNT_FOR_HAVE_PERSON){
+                this.game.mapManager.waitPopulation+=1;
+                this.populationLabel.setString(this.game.mapManager.waitPopulation);
+                this.game.mapManager.food -= CONFIG.FOOD_AMOUNT_FOR_HAVE_PERSON;
+            }
+        }, this);
+        button003.setAnchorPoint(0, 0);
+        button003.setPosition(160 * 3 -140, 10);
+
+        //建物リセット用のwindow
+        this.unUseSprite = cc.Sprite.create(res.Unuse_Sprite_png);
+        this.unUseSprite.setAnchorPoint(0,0);
+        button003.addChild(this.unUseSprite);
+
+        this.populationLabel = cc.LabelTTF.create(this.game.mapManager.waitPopulation, "Arial", 30);
+        this.populationLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
+        this.populationLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
+        this.populationLabel.setAnchorPoint(0,0);
+        button003.addChild(this.populationLabel);
+        this.populationLabel.setPosition(15, 15);
+
         var button004 = new cc.MenuItemImage(res.Building_Button_png, res.Building_Button_On_png, function() {
             if (this.game.setBuilding.isVisible() == true) return;
             playSE_Button(this.game.storage);
@@ -80,12 +104,17 @@ var Footer = cc.Node.extend({
         button004.setAnchorPoint(0, 0);
         button004.setPosition(160 * 3, 10);
 
-        var menu001 = new cc.Menu(button001, button002, button004);
+        var menu001 = new cc.Menu(button001, button002, button003, button004);
         menu001.setPosition(25, 0);
         this.footerNode.addChild(menu001);
     },
 
     update: function() {
-
+        if(this.game.mapManager.food >= CONFIG.FOOD_AMOUNT_FOR_HAVE_PERSON)
+        {
+            this.unUseSprite.setVisible(false);
+        }else{
+            this.unUseSprite.setVisible(true);
+        }
     },
 });

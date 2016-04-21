@@ -42,10 +42,7 @@ var CutIn = cc.Node.extend(
         this.messageSprite.addChild(menu);
 
         this.setCutInVisible(false);
-/*
-        var _posY = this.game.header.getPosition().y - 250;
-        this.setPosition(0,_posY);
-*/
+
         this.tmpPosY = this.getPosition().y;
         this.spriteOpacity = 0;
 
