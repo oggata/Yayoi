@@ -24,7 +24,7 @@ var Attack = cc.Node.extend({
         this.addChild(this.base);
         this.setVisible(false);
 
-        var okButton = new cc.MenuItemImage(res.Build_Ok_Button, res.Build_Ok_Button, function() {
+        var okButton = new cc.MenuItemImage(res.Button_Ok_png, res.Button_Ok_On_png, function() {
             if (this.game.mapManager.safePositions.length == 0) return;
             if (this.isPushOk == false) return;
             

@@ -22,7 +22,7 @@ var CutIn = cc.Node.extend(
         this.addChild(this.himikoSprite);
         this.himikoSprite.setPosition(600, this.game.viewSize.height / 2 - 70);
 
-        this.messageSprite = cc.Sprite.create(res.Message1_png);
+        this.messageSprite = cc.Sprite.create(res.Window_Message_png);
         this.messageSprite.setPosition(320,this.game.viewSize.height/2);
         this.addChild(this.messageSprite);
 

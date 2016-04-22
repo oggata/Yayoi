@@ -112,8 +112,20 @@ var FarmLayer = cc.Layer.extend({
 
         this.setUI();
 
-        //this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(1,3));
-        this.mapManager.renderItems(0, 0, 0, 15);
+
+        if(this.mapManager.population >= 0)
+        {
+            this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(1,3));
+        }else if(this.mapManager.population >= 10)
+        {
+            this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(5,10));
+        }else if(this.mapManager.population >= 30)
+        {
+            this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(5,15));
+        }else if(this.mapManager.population >= 50)
+        {
+            this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(5,20));
+        }
 
         this.scheduleUpdate();
         return true;
@@ -375,8 +387,8 @@ var FarmLayer = cc.Layer.extend({
             if (this.mapManager.waitPopulation >= 1) {
                 this.mapManager.waitPopulation -= 1;
                 this.mapManager.population += 1;
+                this.mapManager.increasePopulationCount+=1;
                 this.footer.populationLabel.setString(this.mapManager.waitPopulation);
-
 
                 var _housePosArray = this.mapManager.housePositions;
                 var shuffle = function() {
@@ -387,6 +399,7 @@ var FarmLayer = cc.Layer.extend({
             } else {
                 this.footer.populationLabel.setString(this.mapManager.waitPopulation);
             }
+            this.mapManager.saveData();
         }
 
         //サイクル毎(1月)に結果を算出する
@@ -561,7 +574,6 @@ var FarmLayer = cc.Layer.extend({
         this.human.setPosition(_x, _y);
         this.human.route = this.mapManager.getRouteIds(mapId, 3);
         this.humans.push(this.human);
-        this.mapManager.increasePopulationCount+=1;
     },
 
     addWarriorByMapChip: function(mapId, distonationMapId, time) {
@@ -623,6 +635,16 @@ var FarmLayer = cc.Layer.extend({
             this.baseNode.addChild(this.effect, 99999999);
             this.effect.setPosition(_x, _y);
             this.effects.push(this.effect);
+        }
+    },
+
+    isExistsItemKey: function(itemKey){
+        for (var i=0 ; i<=this.storage.itemLibraries.length ; i++){
+            if(this.storage.itemLibraries[i]["id"] == itemKey)
+            {
+                return true;
+            }
+            return false;
         }
     },
 

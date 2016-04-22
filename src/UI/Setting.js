@@ -37,7 +37,7 @@ var Setting = cc.Node.extend({
         this.boardSprite.addChild(this.messageLabel);
         this.messageLabel.setPosition(150, 220);
 
-        var resetOkButton = new cc.MenuItemImage(res.Build_Ok_Button, res.Build_Ok_Button, function() {
+        var resetOkButton = new cc.MenuItemImage(res.Button_Ok_png, res.Button_Ok_On_png, function() {
             if (this.resetLayer.isVisible()) {
                 cc.sys.localStorage.clear();
                 var storage = new Storage();
@@ -51,7 +51,7 @@ var Setting = cc.Node.extend({
         resetOkButton.setAnchorPoint(0.5, 0.5);
         resetOkButton.setPosition(200, 100);
 
-        var resetCancelButton = new cc.MenuItemImage(res.Build_Ng_Button, res.Build_Ng_Button, function() {
+        var resetCancelButton = new cc.MenuItemImage(res.Button_Ng_png, res.Button_Ng_On_png, function() {
             if (this.resetLayer.isVisible()) {
                 this.resetLayer.setVisible(false);
             }
@@ -93,7 +93,7 @@ var Setting = cc.Node.extend({
 
         //<-----------------クレジット用の画面ここまで
 
-        var resetButton = new cc.MenuItemImage(res.Data_Reset_Button_png, res.Data_Reset_Button_png, function() {
+        var resetButton = new cc.MenuItemImage(res.Button_Data_Reset_png, res.Button_Data_Reset_png, function() {
             this.resetLayer.setVisible(true);
         }, this);
         resetButton.setPosition(280, 100);
@@ -109,7 +109,7 @@ var Setting = cc.Node.extend({
         this.menuButton.setPosition(0, 0);
         this.settingWindow.addChild(this.menuButton);
 
-        var bgmOnButton = new cc.MenuItemImage(res.Sound_On_Button_png, res.Sound_On_Button_png, function() {
+        var bgmOnButton = new cc.MenuItemImage(res.Button_Sound_On_png, res.Button_Sound_On_png, function() {
             this.setBGMVolume();
         }, this);
         bgmOnButton.setAnchorPoint(0.5, 0.5);
@@ -120,7 +120,7 @@ var Setting = cc.Node.extend({
         this.menuBgmButtonOn.setPosition(0, 0);
         this.settingWindow.addChild(this.menuBgmButtonOn, 99999);
 
-        var seOnButton = new cc.MenuItemImage(res.Sound_On_Button_png, res.Sound_On_Button_png, function() {
+        var seOnButton = new cc.MenuItemImage(res.Button_Sound_On_png, res.Button_Sound_On_png, function() {
             this.setSEVolume();
         }, this);
         seOnButton.setAnchorPoint(0.5, 0.5);
@@ -131,7 +131,7 @@ var Setting = cc.Node.extend({
         this.menuSeButtonOn.setPosition(0, 0);
         this.settingWindow.addChild(this.menuSeButtonOn, 99999);
 
-        var bgmOffButton = new cc.MenuItemImage(res.Sound_Off_Button_png, res.Sound_Off_Button_png, function() {
+        var bgmOffButton = new cc.MenuItemImage(res.Button_Sound_Off_png, res.Button_Sound_Off_png, function() {
             this.setBGMVolume();
         }, this);
         bgmOffButton.setAnchorPoint(0.5, 0.5);
@@ -142,7 +142,7 @@ var Setting = cc.Node.extend({
         this.menuBgmButtonOff.setPosition(0, 0);
         this.settingWindow.addChild(this.menuBgmButtonOff, 99999);
 
-        var seOffButton = new cc.MenuItemImage(res.Sound_Off_Button_png, res.Sound_Off_Button_png, function() {
+        var seOffButton = new cc.MenuItemImage(res.Button_Sound_Off_png, res.Button_Sound_Off_png, function() {
             this.setSEVolume();
         }, this);
         seOffButton.setAnchorPoint(0.5, 0.5);

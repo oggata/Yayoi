@@ -62,10 +62,6 @@ var MapManager = cc.Node.extend({
 
     calcPastTime1: function(_pastCycle, type) {
         for (var i = 0; i < _pastCycle; i++) {
-            this.killedEnemyCount = 0;
-            this.gotFoodCount = 0;
-            this.increasePopulationCount = 0;
-            this.killedPopulationCount = 0;
         }
         this.sumPastCycle += _pastCycle;
         this.setMessage(this.sumPastCycle);
@@ -75,6 +71,10 @@ var MapManager = cc.Node.extend({
     },
 
     setMessage: function(_sumPastCycle) {
+        var _reward = this.increasePopulationCount * 10 
+        - this.killedPopulationCount * 10 
+        + this.killedEnemyCount * 10;
+
         this.messages.push(
             CONFIG.MONTHLY_MESSAGE.format(
                 this.getCycleText(_sumPastCycle)["year"],
@@ -83,9 +83,14 @@ var MapManager = cc.Node.extend({
                 this.gotFoodCount,
                 this.increasePopulationCount,
                 this.killedPopulationCount,
-                100
+                _reward
             )
         );
+
+        this.killedEnemyCount = 0;
+        this.gotFoodCount = 0;
+        this.increasePopulationCount = 0;
+        this.killedPopulationCount = 0;
     },
 
     getCycleText: function(cycle) {

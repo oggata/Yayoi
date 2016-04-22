@@ -48,6 +48,7 @@ var Gauge = cc.Node.extend({
     },
     init: function() {},
     update: function(scaleNum) {
+        scaleNum = scaleNum || 0;
         this.rectBar.setScale(scaleNum, 1);
     },
 });

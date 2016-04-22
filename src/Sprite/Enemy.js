@@ -11,7 +11,7 @@ var Enemy = cc.Node.extend({
         this._super();
         this.game = game;
         this.mapId = null;
-        this.image = res.Effect_Enemy_png;
+        this.image = res.Effect_Enemy2_png;
         this.initializeWalkAnimation();
         this.warriorCount = getRandNumberFromRange(3,5);
         this.hp = 150 * this.warriorCount;
@@ -41,16 +41,16 @@ var Enemy = cc.Node.extend({
 
     initializeWalkAnimation: function() {
         var frameSeq = [];
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
-                var frame = cc.SpriteFrame.create(this.image, cc.rect(750/3 * j, 750/3 * i,
-                    750/3, 750/3));
+        for (var i = 0; i < 1; i++) {
+            for (var j = 0; j < 10; j++) {
+                var frame = cc.SpriteFrame.create(this.image, cc.rect(240 * j, 240 * i,
+                    240, 240));
                 frameSeq.push(frame);
             }
         }
         this.wa = cc.Animation.create(frameSeq, 0.1);
         this.ra = cc.RepeatForever.create(cc.Animate.create(this.wa));
-        this.sprite = cc.Sprite.create(this.image, cc.rect(0, 0, 750/3, 750/3));
+        this.sprite = cc.Sprite.create(this.image, cc.rect(0, 0, 240, 240));
         this.sprite.runAction(this.ra);
         this.addChild(this.sprite);
         this.sprite.setOpacity(255 * 0.8);

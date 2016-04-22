@@ -26,23 +26,23 @@ var Shop = cc.Node.extend({
         this.settingWindow = cc.Sprite.create(res.Setting_Window_png);
         this.addChild(this.settingWindow);
 
-        var menu001Button = new cc.MenuItemImage(res.Setting_Menu_Button_001_png, res.Setting_Menu_Button_001_png, function() {
+        var menu001Button = new cc.MenuItemImage(res.Button_Setting_Menu_001_png, res.Button_Setting_Menu_001_png, function() {
             this.refresh_items(this.pos_f, calledLayer);
         }, this);
         menu001Button.setAnchorPoint(0, 0);
         menu001Button.setPosition(10, 550);
 
-        var menu002Button = new cc.MenuItemImage(res.Setting_Menu_Button_002_png, res.Setting_Menu_Button_002_png, function() {
+        var menu002Button = new cc.MenuItemImage(res.Button_Setting_Menu_002_png, res.Button_Setting_Menu_002_png, function() {
             this.refresh_items(this.pos_h, calledLayer);
         }, this);
         menu002Button.setAnchorPoint(0, 0);
-        menu002Button.setPosition(10 + 167 + 10, 550);
+        menu002Button.setPosition(187, 550);
 
-        var menu003Button = new cc.MenuItemImage(res.Setting_Menu_Button_003_png, res.Setting_Menu_Button_003_png, function() {
+        var menu003Button = new cc.MenuItemImage(res.Button_Setting_Menu_003_png, res.Button_Setting_Menu_003_png, function() {
             this.refresh_items(this.pos_s, calledLayer);
         }, this);
         menu003Button.setAnchorPoint(0, 0);
-        menu003Button.setPosition(10 + 167 + 10 + 167 + 10, 550);
+        menu003Button.setPosition(364, 550);
 
         this.menuButton = new cc.Menu(
             menu001Button, menu002Button, menu003Button
@@ -70,12 +70,11 @@ var Shop = cc.Node.extend({
         game.buildingInfo.positionNameLabel.setString(itemData["name"]);
         game.buildingInfo.positionAmountLabel.setString(itemData["amount"]);
         game.buildingInfo.positionDetailLabel.setString(
-            itemData["description"] + " 運用コスト" + itemData["cost"]
+            itemData["description"]
         );
     },
 
     setSlectedItemByAmount: function(game, itemData, itemSprite) {
-        //if(game.mapManager.amount >= 1)
         if (game.mapManager.amount >= itemData["amount"]) {
             if (this.selectedItemId == itemData["id"]) {
                 game.targetItem.setTexture(itemData["map_chip"]);

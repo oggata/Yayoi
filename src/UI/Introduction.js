@@ -58,6 +58,23 @@ var Introduction = cc.Node.extend({
 
     update: function() {
 
+        if (this.game.storage.tutorialNum == 1 && this.messages.length == 0) {
+            this.setVisible(true);
+            this.messages.push(CONFIG.TUTORIAL_MESSAGE_001_A);
+            this.messages.push(CONFIG.TUTORIAL_MESSAGE_001_B);
+            this.messages.push(CONFIG.TUTORIAL_MESSAGE_001_C);
+            this.messages.push(CONFIG.TUTORIAL_MESSAGE_001_D);
+            this.messages.push(CONFIG.TUTORIAL_MESSAGE_001_E);
+            this.messages.push(CONFIG.TUTORIAL_MESSAGE_001_F);
+            this.game.mapManager.amount = 100;
+            this.game.header.missionLabel.setString("田の設置と住民が収穫するまで");
+        }
+
+        /*
+        if (this.game.storage.tutorialNum == 2 && this.messages.length == 0 && this.game.mapManager.food >= 1) {
+
+        }*/
+/*
         if (this.storage.tutorialNum == 2) {
             this.game.header.missionLabel.setString("田の設置と住民が収穫するまで");
         }
@@ -87,24 +104,7 @@ var Introduction = cc.Node.extend({
             //this.game.header.missionLabel.setString("");
         }
 
-        //tutorial 1
-        if (this.game.storage.tutorialNum == 1 && this.messages.length == 0) {
-            this.setVisible(true);
-            this.messages = [
-                "ここは戦乱の地、「邪馬台国」である。\n" + "私はこの土地に生まれ、この土地を統治する\n運命にある者。\n" + "名を......卑弥呼という。\n" + "",
 
-                "邪馬台国は稲穂の豊かに実る場所...\n" + "今は見ての通り、わずかな人々が暮らす国だが、\n" + "私はこの豊かな場所に、作物を育て、住処を作り、\n" + "家族を作り、子を産み...安心し暮らすことができる\n" + "大きな国をつくりたいと思っている.",
-
-                "今、私には何の力もがないが\n" + "この国の発展と共に、\n" + "大地のエネルギーを集め、神に祈ることで、\n" + "まじないの力を取り戻すことができるはずじゃ.\n" + "",
-
-                "それまでそなたの助けを借りたいと思っているが\n" + "この国に住む民のためにも、わらわのためにも\n" + "力を貸して欲しい.....\n" + "",
-
-                "さっそくだが、\n" + "いま、この地は、安定して食料を得ることができず\n" + "民たちは、日々困っている.\n" + "田を作ることができれば、\n食料を得ることができると思うのだが、\n" + "住民のために田を作って欲しい.",
-
-                "右下の建物建築用のメニューから\n" + "「食料」のタブに入っている「田」を一つ選んで\n" + "住民が収穫しやすいように住居の近くに\n" + "設置してほしい.\n"
-            ];
-            this.game.mapManager.amount += 50;
-        }
 
         //tutorial 2
         if (this.game.storage.tutorialNum == 2 && this.messages.length == 0 && this.game.mapManager.food >= 1) {
@@ -180,6 +180,18 @@ var Introduction = cc.Node.extend({
         if (this.game.storage.tutorialNum == 9 && this.messages.length == 0 && this.game.mapManager.population >= 100) {
         }
 
+        if (this.messages.length >= 1) {
+            this.messageTime++;
+            if (this.messageTime >= 1) {
+                this.messageTime = 0;
+                this.visibleStrLenght++;
+            }
+            if (this.visibleStrLenght >= this.messages[0].length) {
+                this.visibleStrLenght = this.messages[0].length;
+            }
+            var _visibleString = this.messages[0].substring(0, this.visibleStrLenght);
+            this.messageLabel.setString(_visibleString);
+        }*/
         if (this.messages.length >= 1) {
             this.messageTime++;
             if (this.messageTime >= 1) {
