@@ -76,12 +76,12 @@ var Footer = cc.Node.extend({
         this.unUseSprite.setAnchorPoint(0,0);
         button003.addChild(this.unUseSprite);
 
-        this.populationLabel = cc.LabelTTF.create(this.game.mapManager.waitPopulation, "Arial", 30);
+        this.populationLabel = cc.LabelTTF.create(this.game.mapManager.waitPopulation, "Arial", 50);
         this.populationLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
         this.populationLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
-        this.populationLabel.setAnchorPoint(0,0);
+        //this.populationLabel.setAnchorPoint(0,0);
         button003.addChild(this.populationLabel);
-        this.populationLabel.setPosition(15, 15);
+        this.populationLabel.setPosition(60,60);
 
         var button004 = new cc.MenuItemImage(res.Building_Button_png, res.Building_Button_On_png, function() {
             if (this.game.setBuilding.isVisible() == true) return;

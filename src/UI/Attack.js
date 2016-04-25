@@ -24,7 +24,7 @@ var Attack = cc.Node.extend({
         this.addChild(this.base);
         this.setVisible(false);
 
-        var okButton = new cc.MenuItemImage(res.Button_Ok_png, res.Button_Ok_On_png, function() {
+        var okButton = new cc.MenuItemImage(res.Button_Attack_png, res.Button_Attack_On_png, function() {
             if (this.game.mapManager.safePositions.length == 0) return;
             if (this.isPushOk == false) return;
             
@@ -53,7 +53,7 @@ var Attack = cc.Node.extend({
             this.setVisible(false);
             playSE002_Button();
         }, this);
-        okButton.setPosition(-170 + 170 / 2, 70);
+        okButton.setPosition(-170 + 170 / 2 + 50 + 50 -15, 70 + 30 + 20);
 
         //建物リセット用のwindow
         this.unUseSprite = cc.Sprite.create(res.Unuse_Sprite_png);
@@ -65,7 +65,7 @@ var Attack = cc.Node.extend({
         this.messageLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
         this.messageLabel.setAnchorPoint(0.5, 0.5);
         this.base.addChild(this.messageLabel);
-        this.messageLabel.setPosition(280, 200);
+        this.messageLabel.setPosition(140, 190 + 20);
 
         var menu022 = new cc.Menu(okButton);
         menu022.setPosition(0, 0);

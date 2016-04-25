@@ -84,7 +84,7 @@ var Storage = cc.Class.extend(
         ];
 
         this.itemLibraries = [
-            {"id":"f_i001_lv1_a90","lv":1,"name" :"雑穀畑(アワ)",    "description":"食料+5","item":"res/f_001.png","map_chip":"res/f_i001_lv1_a90.png","food":5,  "maxFood":0, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0},
+            {"id":"f_i001_lv1_a90","lv":1,"name" :"雑穀畑(アワ)",    "description":"食料+3","item":"res/f_001.png","map_chip":"res/f_i001_lv1_a90.png","food":3,  "maxFood":0, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0},
             {"id":"f_i002_lv1_a90","lv":1,"name" :"雑穀畑(ヒエ)",    "description":"食料+1","item":"res/f_002.png","map_chip":"res/f_i002_lv1_a90.png","food":1,  "maxFood":0, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0},
             {"id":"f_i003_lv1_a90","lv":1,"name" :"水田(イネ)",      "description":"食料+1","item":"res/f_003.png","map_chip":"res/f_i003_lv1_a90.png","food":1,  "maxFood":0, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0},
             {"id":"f_i004_lv1_a90","lv":1,"name" :"高床式倉庫A",     "description":"備蓄+10","item":"res/f_004.png","map_chip":"res/f_i004_lv1_a90.png","food":0,  "maxFood":10, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0},
@@ -94,9 +94,9 @@ var Storage = cc.Class.extend(
             {"id":"f_i008_lv1_a90","lv":1,"name" :"",               "description":"","item":"res/f_008.png","map_chip":"res/f_i008_lv1_a90.png","food":0,  "maxFood":0, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0,"maxAmount" : 0},
             {"id":"f_i009_lv1_a90","lv":1,"name" :"",               "description":"","item":"res/f_009.png","map_chip":"res/f_i009_lv1_a90.png","food":0,  "maxFood":0, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0,"maxAmount" : 0},
            
-            {"id":"h_i001_lv1_a90","lv":1,"name" :"住居A",          "description":"住居+10人 備蓄+5","item":"res/h_001.png","map_chip":"res/h_i001_lv1_a90.png","food":0, "maxFood":5,  "house":10,  "safe":0, "amount":100,"maxAmount" : 0},
-            {"id":"h_i002_lv1_a90","lv":1,"name" :"住居B",          "description":"住居+20人 備蓄+10","item":"res/h_002.png","map_chip":"res/h_i002_lv1_a90.png","food":0, "maxFood":10,  "house":20,  "safe":0, "amount":200,"maxAmount" : 0},
-            {"id":"h_i003_lv1_a90","lv":1,"name" :"住居C",          "description":"住居+30人 備蓄+15","item":"res/h_003.png","map_chip":"res/h_i003_lv1_a90.png","food":0, "maxFood":15,  "house":30,  "safe":0, "amount":300,"maxAmount" : 0},
+            {"id":"h_i001_lv1_a90","lv":1,"name" :"住居A",          "description":"住居+5人 備蓄+5","item":"res/h_001.png","map_chip":"res/h_i001_lv1_a90.png","food":0, "maxFood":5,  "house":5,  "safe":0, "amount":100,"maxAmount" : 0},
+            {"id":"h_i002_lv1_a90","lv":1,"name" :"住居B",          "description":"住居+10人 備蓄+10","item":"res/h_002.png","map_chip":"res/h_i002_lv1_a90.png","food":0, "maxFood":10,  "house":10,  "safe":0, "amount":200,"maxAmount" : 0},
+            {"id":"h_i003_lv1_a90","lv":1,"name" :"住居C",          "description":"住居+15人 備蓄+15","item":"res/h_003.png","map_chip":"res/h_i003_lv1_a90.png","food":0, "maxFood":15,  "house":15,  "safe":0, "amount":300,"maxAmount" : 0},
             {"id":"h_i004_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_004.png","map_chip":"res/h_i004_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
             {"id":"h_i005_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_005.png","map_chip":"res/h_i005_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
             {"id":"h_i006_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_006.png","map_chip":"res/h_i006_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},

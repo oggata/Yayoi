@@ -35,6 +35,9 @@ var res = {
     Build_Ok_Button : "res/button_ok.png",
     Build_Ng_Button : "res/button_ng.png",
 
+    Button_Attack_png : "res/button_attack.png",
+    Button_Attack_On_png : "res/button_attack_on.png",
+
     Building_Button_png : "res/button_building.png",
     Building_Button_On_png : "res/button_building_on.png",
     Setting_Button_png : "res/button_setting.png",

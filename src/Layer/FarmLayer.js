@@ -112,7 +112,7 @@ var FarmLayer = cc.Layer.extend({
 
         this.setUI();
 
-
+/*
         if(this.mapManager.population >= 0)
         {
             this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(1,3));
@@ -126,7 +126,8 @@ var FarmLayer = cc.Layer.extend({
         {
             this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(5,20));
         }
-
+*/
+this.mapManager.renderItems(0, 0, 0, 5);
         this.scheduleUpdate();
         return true;
     },
@@ -193,11 +194,11 @@ var FarmLayer = cc.Layer.extend({
         this.baseNode.addChild(this.mapInfoSprite, 9999999);
         this.mapInfoSprite.setOpacity(255 * 0.5);
 
-        this.mapInfo = cc.LabelTTF.create("", "Arial", 24);
-        this.mapInfo.setFontFillColor(new cc.Color(0, 0, 0, 255));
-        this.mapInfo.setPosition(241 / 2, 50);
-        this.mapInfo.setAnchorPoint(0.5, 0);
-        this.mapInfoSprite.addChild(this.mapInfo);
+        this.mapInfoLabel = cc.LabelTTF.create("", "Arial", 24);
+        this.mapInfoLabel.setFontFillColor(new cc.Color(0, 0, 0, 255));
+        this.mapInfoLabel.setPosition(241 / 2, 70);
+        this.mapInfoLabel.setAnchorPoint(0.5, 0);
+        this.mapInfoSprite.addChild(this.mapInfoLabel);
 
         this.introduction = new Introduction(this);
         this.addChild(this.introduction);
@@ -261,10 +262,10 @@ var FarmLayer = cc.Layer.extend({
                     var _txt = this.mapChips[i].itemData["name"];
                     _txt += "\n" + this.mapChips[i].itemData["description"];
                     //_txt += "\nコスト：" + this.mapChips[i].itemData["cost"];
-                    this.mapInfo.setString(_txt);
+                    this.mapInfoLabel.setString(_txt);
                     this.mapInfoSprite.setVisible(true);
                 } else {
-                    this.mapInfo.setString("");
+                    this.mapInfoLabel.setString("");
                     this.mapInfoSprite.setVisible(false);
                 }
 
@@ -358,6 +359,7 @@ var FarmLayer = cc.Layer.extend({
             this.mapManager.renderWorld();
         }
 
+        this.mapManager.amount += 10;
         this.introduction.update();
         if (this.introduction.isVisible()) return;
 
@@ -456,7 +458,7 @@ var FarmLayer = cc.Layer.extend({
             if (this.enemies[i].update() == false) {
                 this.mapManager.killedEnemyCount+=1;
                 this.mapManager.amount += this.enemies[i].reward;
-                this.addEffectByMapChip(this.enemies[i].mapId, "moeny");
+                this.addEffectByMapChip(this.enemies[i].mapId, "money");
                 this.baseNode.removeChild(this.enemies[i]);
                 this.enemies.splice(i, 1);
             } else {
@@ -644,7 +646,7 @@ var FarmLayer = cc.Layer.extend({
             {
                 return true;
             }
-            return false;
+            return true;
         }
     },
 
