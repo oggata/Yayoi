@@ -26,14 +26,14 @@ var Header = cc.Node.extend(
 
         this.populationLabel = cc.LabelTTF.create("", "Arial", 18);
         this.populationLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
-        this.populationLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
+        //this.populationLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
         this.populationLabel.setAnchorPoint(1,0);
         this.header.addChild(this.populationLabel);
         this.populationLabel.setPosition(170, 57);
 
         this.amountLabel = cc.LabelTTF.create("", "Arial", 18);
         this.amountLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
-        this.amountLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
+        //this.amountLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
         this.amountLabel.setAnchorPoint(1,0);
         this.header.addChild(this.amountLabel);
         this.amountLabel.setPosition(170, 28);

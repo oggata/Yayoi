@@ -37,6 +37,12 @@ var res = {
 
     Button_Attack_png : "res/button_attack.png",
     Button_Attack_On_png : "res/button_attack_on.png",
+    Button_Add_People_png : "res/button_add_people.png",
+    Button_Add_People_On_png : "res/button_add_people_on.png",
+    Button_Destroy_png : "res/button_destroy.png",
+    Button_Destroy_On_png : "res/button_destroy_on.png",
+    Button_Action_Disable_png : "res/button_action_disable.png",
+
 
     Building_Button_png : "res/button_building.png",
     Building_Button_On_png : "res/button_building_on.png",
@@ -68,7 +74,11 @@ var res = {
     Setting_Menu_png : "res/window_setting.png",
     Message_png : "res/window_message.png",
     Positioning_png : "res/window_positioning.png",
-    Attack_Window_png : "res/window_attack.png",
+    //Attack_Window_png : "res/window_attack.png",
+
+    Window_Description_png : "res/window_description.png",
+    Window_Description_Food_png : "res/window_description_food.png",
+    Window_Description_Amount_png : "res/window_description_amount.png",
 
     Message_Add_Population_png : "res/message_add_population.png",
 

@@ -112,64 +112,30 @@ var FarmLayer = cc.Layer.extend({
 
         this.setUI();
 
-/*
-        if(this.mapManager.population >= 0)
-        {
-            this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(1,3));
-        }else if(this.mapManager.population >= 10)
-        {
-            this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(5,10));
-        }else if(this.mapManager.population >= 30)
-        {
-            this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(5,15));
-        }else if(this.mapManager.population >= 50)
-        {
-            this.mapManager.renderItems(0, 0, 0, getRandNumberFromRange(5,20));
+        if(this.mapManager.population >= 15){
+            this.mapManager.renderItems(0, 0, 0, 3);
         }
-*/
-this.mapManager.renderItems(0, 0, 0, 5);
         this.scheduleUpdate();
         return true;
     },
 
     setUI: function() {
-        //カットインを作成
-        this.cutIn = new CutIn(this);
-        this.addChild(this.cutIn);
-
-        this.shop = new Shop(this);
-        this.addChild(this.shop);
-        this.shop.setVisible(false);
-        this.shop.setPosition(320, this.viewSize.height / 2);
-
-        this.setting = new Setting(this);
-        this.addChild(this.setting);
-        this.setting.setVisible(false);
-        this.setting.setPosition(320, this.viewSize.height / 2);
-
-        this.tutorial = new Tutorial();
-        this.addChild(this.tutorial);
-        this.tutorial.setVisible(false);
-        this.tutorial.setPosition(320, this.viewSize.height / 2);
+        this.ActionWindow = new Action(this);
+        this.addChild(this.ActionWindow);
+        this.ActionWindow.setPosition(100,200);
+        this.ActionWindow.setVisible(false);
 
         this.lvManage = new LevelManage();
         this.addChild(this.lvManage);
         this.lvManage.setVisible(false);
 
-        this.footer = new Footer(this);
-        this.addChild(this.footer);
-
-        this.attackWindow = new Attack(this);
-        this.baseNode.addChild(this.attackWindow, 9999999);
-        this.attackWindow.setPosition(320, 250);
-
         this.resetWindow = new RemoveBuilding(this);
         this.addChild(this.resetWindow);
-        this.resetWindow.setPosition(320, 250);
+        this.resetWindow.setPosition(320, 150);
 
         this.setBuilding = new SetBuilding(this);
         this.addChild(this.setBuilding);
-        this.setBuilding.setPosition(320, 250);
+        this.setBuilding.setPosition(320, 150);
 
         this.buildingInfo = new InfoBuilding();
         this.addChild(this.buildingInfo);
@@ -190,19 +156,31 @@ this.mapManager.renderItems(0, 0, 0, 5);
         this.targetNgSprite.setAnchorPoint(0.5, 0);
         this.baseNode.addChild(this.targetNgSprite, 9999999);
 
-        this.mapInfoSprite = cc.Sprite.create(res.Info_png);
-        this.baseNode.addChild(this.mapInfoSprite, 9999999);
-        this.mapInfoSprite.setOpacity(255 * 0.5);
-
-        this.mapInfoLabel = cc.LabelTTF.create("", "Arial", 24);
-        this.mapInfoLabel.setFontFillColor(new cc.Color(0, 0, 0, 255));
-        this.mapInfoLabel.setPosition(241 / 2, 70);
-        this.mapInfoLabel.setAnchorPoint(0.5, 0);
-        this.mapInfoSprite.addChild(this.mapInfoLabel);
-
         this.introduction = new Introduction(this);
         this.addChild(this.introduction);
         this.introduction.setVisible(false);
+
+        this.tutorial = new Tutorial();
+        this.addChild(this.tutorial);
+        this.tutorial.setVisible(false);
+        this.tutorial.setPosition(320, this.viewSize.height / 2);
+
+        //カットインを作成
+        this.cutIn = new CutIn(this);
+        this.addChild(this.cutIn);
+
+        this.shop = new Shop(this);
+        this.addChild(this.shop);
+        this.shop.setVisible(false);
+        this.shop.setPosition(320, this.viewSize.height / 2);
+
+        this.setting = new Setting(this);
+        this.addChild(this.setting);
+        this.setting.setVisible(false);
+        this.setting.setPosition(320, this.viewSize.height / 2);
+
+        this.footer = new Footer(this);
+        this.addChild(this.footer);
     },
 
     getItemFromLibrary: function(itemId) {
@@ -214,6 +192,79 @@ this.mapManager.renderItems(0, 0, 0, 5);
         return this.storage.itemLibraries[1];
     },
 
+    moveTouchedMarker:function(touchX,touchY){
+        for (var i = 0; i < this.mapChips.length; i++) {
+            if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
+                var _x = this.mapChips[i].getPosition().x;
+                var _y = this.mapChips[i].getPosition().y;
+
+                //ターゲットを移動させる
+                this.targetOkSprite.setPosition(_x, _y);
+                this.targetNgSprite.setPosition(_x, _y);
+                this.targetItem.setPosition(_x, _y);
+            }
+        }
+    },
+
+    getTouchedEnemy: function(touchX,touchY){
+        for (var i = 0; i < this.mapChips.length; i++) {
+            if (!this.mapChips[i]) return;
+            if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
+                var _chkMapId = this.mapChips[i].mapId;
+                for (var n = 0; n < this.enemies.length; n++) {
+                    if (_chkMapId == this.enemies[n].mapId) {
+                        return this.enemies[n];
+                    }
+                }
+            }
+        }
+        return null;
+    },
+
+    getTouchedBuilding: function(touchX,touchY)
+    {
+        for (var i = 0; i < this.mapChips.length; i++) {
+            if (!this.mapChips[i]) return;
+            if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
+                var _chkMapId = this.mapChips[i].mapId;
+                if(this.mapChips[i].itemData){
+                    return this.mapChips[i].itemData;
+                }
+            }
+        }
+        return null;
+    },
+
+    getTouchedMapChip: function(touchX,touchY)
+    {
+        for (var i = 0; i < this.mapChips.length; i++) {
+            if (!this.mapChips[i]) return;
+            if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
+                var _chkMapId = this.mapChips[i].mapId;
+                if(this.mapChips[i]){
+                    return this.mapChips[i];
+                }
+            }
+        }
+        return null;
+    },
+
+    setBuildingToTouchedPosition: function(mapChip)
+    {
+        this.targetItem.setOpacity(0.5 * 255);   
+        //<--------1個前のmapIDと押下したmapIDが同じだったら設置する-------->
+        if (this.pushedMapId == mapChip.mapId) {
+//this.mapManager.setPositionByMapChip(mapChip.mapId);
+            this.setBuilding.mapChip = mapChip;
+            this.setBuilding.itemData = this.hasItemData;
+            this.setBuilding.setVisible(true);
+            this.shop.selectedItemId = null;
+        }
+        //記録
+        this.pushedMapId = mapChip.mapId;
+        return;
+    },
+
     touchStart: function(location) {
         if (
             this.setBuilding.isVisible() == true ||
@@ -223,6 +274,7 @@ this.mapManager.renderItems(0, 0, 0, 5);
             this.tutorial.isVisible() == true ||
             this.introduction.isVisible() == true
         ) return;
+
         playSE_Button(this.storage);
 
         this.firstTouchX = location.x;
@@ -230,95 +282,66 @@ this.mapManager.renderItems(0, 0, 0, 5);
         var touchX = location.x - this.lastTouchGameLayerX;
         var touchY = location.y - this.lastTouchGameLayerY;
 
-        //ターゲットとhitした場合は、actionCodeを実行する
-        //actionCode = 1:設置準備  2:設置
-        if ((this.targetOkSprite.getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.targetOkSprite.getPosition().x + 216 / 3) * this.windowScale && (this.targetOkSprite.getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.targetOkSprite.getPosition().y + 200 / 3) * this.windowScale) {}
-        for (var i = 0; i < this.mapChips.length; i++) {
-            if (!this.mapChips[i]) return;
+        this.ActionWindow.setVisible(false);
+        this.moveTouchedMarker(touchX,touchY);
+        this.ActionWindow.targetMapChip = null;
+        this.ActionWindow.targetEnemy = null;
+        this.ActionWindow.targetBuilding = null;
+        var mapChip = this.getTouchedMapChip(touchX,touchY);
+        if(mapChip != null)
+        {
+            this.ActionWindow.type = "destroy";
+            this.ActionWindow.targetMapChip = mapChip;
+        }
 
-            if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
-                var _x = this.mapChips[i].getPosition().x;
-                var _y = this.mapChips[i].getPosition().y;
+        var enemy = this.getTouchedEnemy(touchX,touchY);
+        if(enemy != null)
+        {
+            this.ActionWindow.setVisible(true);
+            this.ActionWindow.type = "attack";
+            this.ActionWindow.targetEnemy = enemy;
+            this.buildingInfo.setInfo(enemy.name,enemy.description);
+        }
 
-                //ターゲットを移動させる
-                this.targetOkSprite.setPosition(_x, _y);
-                this.targetNgSprite.setPosition(_x, _y);
-                this.targetItem.setPosition(_x, _y);
-                this.mapInfoSprite.setPosition(_x, _y + 200);
+        var building = this.getTouchedBuilding(touchX,touchY);
+        if(building != null)
+        {
+            this.ActionWindow.setVisible(true);
+            this.ActionWindow.targetBuilding = building;
 
-                var _chkMapId = this.mapChips[i].mapId;
-                this.attackWindow.enemy = null;
-                this.attackWindow.mapId = null;
-                for (var n = 0; n < this.enemies.length; n++) {
-                    if (_chkMapId == this.enemies[n].mapId) {
-                        this.attackWindow.enemy = this.enemies[n];
-                        this.attackWindow.setVisible(true);
-                        this.attackWindow.mapId = this.enemies[n].mapId;
-                    }
-                }
-                this.attackWindow.update();
+            this.buildingInfo.setInfo(building.name,building.description);
 
-                if (this.mapChips[i].itemData != null) {
-                    var _txt = this.mapChips[i].itemData["name"];
-                    _txt += "\n" + this.mapChips[i].itemData["description"];
-                    //_txt += "\nコスト：" + this.mapChips[i].itemData["cost"];
-                    this.mapInfoLabel.setString(_txt);
-                    this.mapInfoSprite.setVisible(true);
-                } else {
-                    this.mapInfoLabel.setString("");
-                    this.mapInfoSprite.setVisible(false);
-                }
+            if(building["house"] > 0)
+            {
+                this.ActionWindow.type = "add_population";
+            }else{
+                this.ActionWindow.type = "destroy";
+            }
+        }
 
-                if (this.mapManager.conf[this.mapChips[i].confNumber] == 3) {
-                    if (this.hasItemData != null) {
-                        this.targetOkSprite.setVisible(true);
-                        this.targetNgSprite.setVisible(false);
+        if (this.hasItemData != null) {
+            //設置可能な場所かどうか確認する
+            var mapChip = this.getTouchedMapChip(touchX,touchY);
+            if(mapChip != null)
+            {
+                if(mapChip.confNum)
+                {
+                    if(mapChip.confNum == 3)
+                    {
+                        this.setBuildingToTouchedPosition(mapChip);
+                    }else{
                         this.targetItem.setOpacity(0.5 * 255);
-                        //<--------1個前のmapIDと押下したmapIDが同じだったら設置する-------->
-                        if (this.pushedMapId == this.mapChips[i].mapId) {
-                            this.mapManager.setPositionByMapChip(
-                                this.mapChips[i].mapId
-                            );
-                            this.setBuilding.mapChip = this.mapChips[i];
-                            this.setBuilding.itemData = this.hasItemData;
-                            this.setBuilding.setVisible(true);
-                            this.shop.selectedItemId = null;
-                        }
-                        //記録
-                        this.pushedMapId = this.mapChips[i].mapId;
-                        return;
-                    } else {
-                        this.targetOkSprite.setVisible(true);
-                        this.targetNgSprite.setVisible(false);
-                        this.targetItem.setOpacity(0 * 255);
-                        this.pushedMapId = this.mapChips[i].mapId;
-                        return;
-                    }
-                } else {
-                    //<--------設置可能場所以外は警告を表示する-------->
-                    if (this.hasItemData != null) {
-                        this.targetOkSprite.setVisible(false);
-                        this.targetNgSprite.setVisible(true);
-                        this.targetItem.setOpacity(0.5 * 255);
-                        this.pushedMapId = this.mapChips[i].mapId;
-                        this.mapManager.setPositionByMapChip(
-                            this.mapChips[i].mapId
-                        );
-                        return;
-                    } else {
-                        //itemを保持していない状態で、2回同じ場所を押したらリセットメニューを開く
-                        if (this.pushedMapId == this.mapChips[i].mapId) {
-                            this.resetWindow.mapChipId = this.mapChips[i].confNumber;
-                            this.resetWindow.setVisible(true);
-                        }
-                        this.targetOkSprite.setVisible(false);
-                        this.targetNgSprite.setVisible(true);
-                        this.targetItem.setOpacity(0);
-                        this.pushedMapId = this.mapChips[i].mapId;
-                        return;
                     }
                 }
             }
+            this.ActionWindow.setVisible(false);
+            this.buildingInfo.setVisible(false);
+        }
+
+        if (this.hasItemData != null || this.shop.selectedItemId != null || building != null || enemy != null) {
+            this.buildingInfo.setVisible(true);
+        } else {
+            this.buildingInfo.setVisible(false);
         }
     },
 
@@ -337,6 +360,8 @@ this.mapManager.renderItems(0, 0, 0, 5);
         var x = this.lastTouchGameLayerX - scrollX;
         var y = this.lastTouchGameLayerY - scrollY;
         this.baseNode.setPosition(x, y);
+        this.ActionWindow.setVisible(false);
+        this.buildingInfo.setVisible(false);
     },
 
     touchFinish: function(location) {
@@ -359,7 +384,6 @@ this.mapManager.renderItems(0, 0, 0, 5);
             this.mapManager.renderWorld();
         }
 
-        this.mapManager.amount += 10;
         this.introduction.update();
         if (this.introduction.isVisible()) return;
 
@@ -373,11 +397,8 @@ this.mapManager.renderItems(0, 0, 0, 5);
 
         this.footer.update();
 
-        if (this.hasItemData != null || this.shop.selectedItemId != null) {
-            this.buildingInfo.setVisible(true);
-        } else {
-            this.buildingInfo.setVisible(false);
-        }
+        this.ActionWindow.update();
+
 
         this.cycleTime += 1;
         this.cycleTimeByTerm += 1;

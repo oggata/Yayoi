@@ -74,6 +74,7 @@ var Footer = cc.Node.extend({
         //建物リセット用のwindow
         this.unUseSprite = cc.Sprite.create(res.Unuse_Sprite_png);
         this.unUseSprite.setAnchorPoint(0,0);
+        this.unUseSprite.retain();
         button003.addChild(this.unUseSprite);
 
         this.populationLabel = cc.LabelTTF.create(this.game.mapManager.waitPopulation, "Arial", 50);
@@ -104,7 +105,7 @@ var Footer = cc.Node.extend({
         button004.setAnchorPoint(0, 0);
         button004.setPosition(160 * 3, 10);
 
-        var menu001 = new cc.Menu(button001, button002, button003, button004);
+        var menu001 = new cc.Menu(button001, button002, button004);
         menu001.setPosition(25, 0);
         this.footerNode.addChild(menu001);
     },

@@ -16,7 +16,9 @@ var Enemy = cc.Node.extend({
         this.warriorCount = getRandNumberFromRange(3,5);
         this.hp = 150 * this.warriorCount;
         this.maxHp = 150 * this.warriorCount;
-        this.reward = 50;
+        this.reward = 8 * this.warriorCount;
+        this.name = "鬼火lv." + this.warriorCount;
+        this.description = "病や災害などをもたらす火";
         /*
         this.gauge = new Gauge(80, 7, 'food');
         this.gauge.setAnchorPoint(0, 0);
@@ -54,5 +56,6 @@ var Enemy = cc.Node.extend({
         this.sprite.runAction(this.ra);
         this.addChild(this.sprite);
         this.sprite.setOpacity(255 * 0.8);
+        this.sprite.setScale(0.7,0.7);
     },
 });

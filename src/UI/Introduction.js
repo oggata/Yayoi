@@ -66,10 +66,31 @@ var Introduction = cc.Node.extend({
             this.messages.push(CONFIG.TUTORIAL_MESSAGE_001_D);
             this.messages.push(CONFIG.TUTORIAL_MESSAGE_001_E);
             this.messages.push(CONFIG.TUTORIAL_MESSAGE_001_F);
-            this.game.mapManager.amount = 100;
+            this.game.mapManager.amount = 300;
             this.game.header.missionLabel.setString("田の設置と住民が収穫するまで");
         }
+/*
+        if (this.game.storage.tutorialNum == 2 && this.messages.length == 0) {
+            this.setVisible(true);
+            this.messages.push(CONFIG.TUTORIAL_MESSAGE_002_A);
+            this.game.mapManager.amount = 100;
+            this.game.header.missionLabel.setString("好きな場所に「住居」を1つ建築する");
+        }
 
+        if (this.game.storage.tutorialNum == 3 && this.messages.length == 0) {
+            this.setVisible(true);
+            this.messages.push(CONFIG.TUTORIAL_MESSAGE_002_A);
+            this.game.mapManager.amount = 100;
+            this.game.header.missionLabel.setString("住居を選んで、人を1人増やす");
+        }
+
+        if (this.game.storage.tutorialNum == 4 && this.messages.length == 0) {
+            this.setVisible(true);
+            this.messages.push(CONFIG.TUTORIAL_MESSAGE_002_A);
+            this.game.mapManager.amount = 100;
+            this.game.header.missionLabel.setString("住居を選んで、人を1人増やす");
+        }
+*/
         /*
         if (this.game.storage.tutorialNum == 2 && this.messages.length == 0 && this.game.mapManager.food >= 1) {
 

@@ -20,8 +20,8 @@ var SetBuilding = cc.Node.extend({
         this.setVisible(false);
 
         var okButton = new cc.MenuItemImage(res.Button_Ok_png, res.Button_Ok_On_png, function() {
-            this.game.targetOkSprite.setVisible(false);
-            this.game.targetNgSprite.setVisible(false);
+            //this.game.targetOkSprite.setVisible(false);
+            //this.game.targetNgSprite.setVisible(false);
             this.game.targetItem.setOpacity(0 * 255);
             if(this.game.hasItemData["id"] && this.game.hasItemData["amount"])
             {
@@ -40,24 +40,24 @@ var SetBuilding = cc.Node.extend({
             this.setVisible(false);
             playSE002_Button();
         }, this);
-        okButton.setPosition(-170 + 170 / 2, 50);
+        okButton.setPosition(-60, 45);
 
         var ngButton = new cc.MenuItemImage(res.Button_Ng_png, res.Button_Ng_On_png, function() {
-            this.game.targetOkSprite.setVisible(false);
-            this.game.targetNgSprite.setVisible(false);
+            //this.game.targetOkSprite.setVisible(false);
+            //this.game.targetNgSprite.setVisible(false);
             this.game.targetItem.setOpacity(0 * 255);
             this.game.hasItemData = null;
             this.game.isReadyToRenderMap = true;
             this.setVisible(false);
         }, this);
-        ngButton.setPosition(0 + 170 / 2, 50);
+        ngButton.setPosition(60, 45);
 
-        this.messageLabel = cc.LabelTTF.create("", "Arial", 28);
+        this.messageLabel = cc.LabelTTF.create("", "Arial", 22);
         this.messageLabel.setFontFillColor(new cc.Color(0, 0, 0, 255));
-        this.messageLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
+        //this.messageLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
         this.messageLabel.setAnchorPoint(0.5, 0.5);
         this.base.addChild(this.messageLabel);
-        this.messageLabel.setPosition(280, 140);
+        this.messageLabel.setPosition(200,120);
 
         var menu022 = new cc.Menu(okButton, ngButton);
         menu022.setPosition(0, 0);

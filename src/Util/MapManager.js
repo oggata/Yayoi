@@ -20,6 +20,7 @@ var MapManager = cc.Node.extend({
         this.foodAvailableList = [];
         this.food = this.storage.food;
         this.house = 0;
+        this.safe = this.storage.safe;
         this.maxFood = 0;
         this.maxHouse = 0;
         this.maxSafe = 0;
@@ -65,13 +66,17 @@ var MapManager = cc.Node.extend({
         }
         this.sumPastCycle += _pastCycle;
         this.setMessage(this.sumPastCycle);
-        this.renderItems(0, 0, 0, getRandNumberFromRange(1, 4));
+        //this.renderItems(0, 0, 0, getRandNumberFromRange(1, 4));
+        if(this.population >= 15){
+            this.renderItems(0, 0, 0, 3);
+        }
         this.saveData();
         this.renderGauge();
     },
 
     setMessage: function(_sumPastCycle) {
         var _reward = this.increasePopulationCount * 10 
+        + this.gotFoodCount * 2
         - this.killedPopulationCount * 10 
         + this.killedEnemyCount * 10;
 
@@ -87,6 +92,7 @@ var MapManager = cc.Node.extend({
             )
         );
 
+        this.amount += _reward;
         this.killedEnemyCount = 0;
         this.gotFoodCount = 0;
         this.increasePopulationCount = 0;
@@ -325,6 +331,7 @@ var MapManager = cc.Node.extend({
         this.house = 0;
         this.maxFood = 0;
         this.maxHouse = 0;
+        this.safe = 0;
         this.maxSafe = 0;
         this.foodRate = 0;
         this.houseRate = 0;
@@ -357,6 +364,10 @@ var MapManager = cc.Node.extend({
                         this.mapChip = new MapChip(itemData, this.conf[confNum]);
                         this.mapChip.retain();
                         this.mapChip.itemData = itemData;
+                        if(this.population <= 15)
+                        {
+                            this.mapChip.maxGrowingCount = getRandNumberFromRange(30*5,30*10)
+                        }
 
                         if (itemData != null) {
                             //パラメーターを加算する
@@ -476,10 +487,10 @@ var MapManager = cc.Node.extend({
         this.game.header.cycleLabel.setString(this.getCycleText(this.sumPastCycle)["year"] + "年" + this.getCycleText(this.sumPastCycle)["month"] + "月" + Math.ceil(this.game.cycleTimeRate * 30) + "日");
         if (this.amount > 0) {
             this.game.header.amountLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
-            this.game.header.amountLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
+            //this.game.header.amountLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
         } else {
             this.game.header.amountLabel.setFontFillColor(new cc.Color(255, 0, 0, 255));
-            this.game.header.amountLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
+            //this.game.header.amountLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
         }
     },
 

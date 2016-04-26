@@ -16,6 +16,7 @@ var MapChip = cc.Node.extend({
         this.foodCount = 0;
         this.growingCount = 0;
         this.maxGrowingCount = getRandNumberFromRange(30*20,30*40);
+        this.confNum = confNum;
 
         if (confNum == 2) {
             this.sprite = cc.Sprite.create(res.Map_Nature_png);

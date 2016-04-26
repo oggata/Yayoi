@@ -20,6 +20,7 @@
         "src/Sprite/MapChip.js",
         "src/Sprite/Effect.js",
         "src/Util/Storage.js",
+        "src/UI/Action.js",
         "src/UI/Attack.js",
         "src/UI/CutIn.js",
         "src/UI/Header.js",
