@@ -70,6 +70,8 @@ var MapManager = cc.Node.extend({
         if(this.population >= 15){
             this.renderItems(0, 0, 0, 3);
         }
+        //リセットする
+        this.safe = this.maxSafe;
         this.saveData();
         this.renderGauge();
     },
@@ -299,8 +301,6 @@ var MapManager = cc.Node.extend({
     },
 
     renderItems: function(_giveFoodCnt, _giveAmountCnt, _giveDokiCnt, _giveIllCnt) {
-        /*すべてのアイテムをリセット*/
-        //全部一旦リセットする
         for (var i = 0; i < this.game.items.length; i++) {
             this.game.baseNode.removeChild(this.game.items[i]);
             this.game.items.splice(i, 1);
@@ -445,7 +445,8 @@ var MapManager = cc.Node.extend({
             this.safe = 9999;
         }
 
-        this.safeRate = Math.ceil(this.maxSafe - this.game.warriorCount) / this.maxSafe;
+        //this.safeRate = Math.ceil(this.maxSafe - this.game.warriorCount) / this.maxSafe;
+        this.safeRate = Math.ceil(this.safe / this.maxSafe);
         if (this.safeRate > 1) {
             this.safeRate = 1;
         }
@@ -481,16 +482,14 @@ var MapManager = cc.Node.extend({
         this.game.header.safeGauge.update(this.safeRate);
         this.game.header.foodLabel.setString(this.food + "/" + this.maxFood);
         this.game.header.houseLabel.setString(this.population + "/" + this.maxHouse);
-        this.game.header.safeLabel.setString(Math.ceil(this.maxSafe - this.game.warriorCount) + "/" + this.maxSafe);
+        this.game.header.safeLabel.setString(this.safe + "/" + this.maxSafe);
         this.game.header.populationLabel.setString("x " + this.population);
         this.game.header.amountLabel.setString("x " + this.amount + " / " + this.maxAmount);
         this.game.header.cycleLabel.setString(this.getCycleText(this.sumPastCycle)["year"] + "年" + this.getCycleText(this.sumPastCycle)["month"] + "月" + Math.ceil(this.game.cycleTimeRate * 30) + "日");
         if (this.amount > 0) {
             this.game.header.amountLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
-            //this.game.header.amountLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
         } else {
             this.game.header.amountLabel.setFontFillColor(new cc.Color(255, 0, 0, 255));
-            //this.game.header.amountLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
         }
     },
 
@@ -499,6 +498,7 @@ var MapManager = cc.Node.extend({
         this.game.storage.sumPastCycle = this.sumPastCycle;
         this.game.storage.food = this.food;
         this.game.storage.amount = this.amount;
+        this.game.storage.safe = this.safe;
         this.storage.saveLastUpdateTime();
     },
 

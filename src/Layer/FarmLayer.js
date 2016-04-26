@@ -399,7 +399,6 @@ var FarmLayer = cc.Layer.extend({
 
         this.ActionWindow.update();
 
-
         this.cycleTime += 1;
         this.cycleTimeByTerm += 1;
 

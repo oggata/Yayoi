@@ -115,7 +115,7 @@ var Action = cc.Node.extend({
             this.destroyButtonDisable.setVisible(true);
         }
 
-        if(this.game.mapManager.food >= 5)
+        if(this.game.mapManager.food >= CONFIG.FOOD_AMOUNT_FOR_HAVE_PERSON)
         {
             this.populationButtonDisable.setVisible(false);
         }else{
@@ -141,7 +141,7 @@ var Action = cc.Node.extend({
             this.addPeopleButton.setVisible(false);
             this.attackButton.setPosition(220,0);
             this.attackMessageLabel.setString("x" + this.targetEnemy.warriorCount * CONFIG.FOOD_AMOUNT_FOR_SALLY_WARRIOR);
-            if(this.game.mapManager.safePositions.length < this.targetEnemy.warriorCount){
+            if(this.game.mapManager.safe < this.targetEnemy.warriorCount){
                 this.attackButtonDisable.setVisible(true);
             }else if(this.enemy.warriorCount * CONFIG.FOOD_AMOUNT_FOR_SALLY_WARRIOR < this.game.mapManager.food)
             {
@@ -169,7 +169,7 @@ var Action = cc.Node.extend({
 
     doAttack : function()
     {
-        if(this.game.mapManager.safePositions.length < this.targetEnemy.warriorCount) return;
+        if(this.game.mapManager.safe < this.targetEnemy.warriorCount) return;
         if(this.enemy.warriorCount * CONFIG.FOOD_AMOUNT_FOR_SALLY_WARRIOR < this.game.mapManager.food) return;
 
         var _minDist = 99999;
@@ -192,9 +192,9 @@ var Action = cc.Node.extend({
                 this.targetMapChip.mapId,
                 i*18
             );
-            this.game.mapManager.food -= CONFIG.FOOD_AMOUNT_FOR_SALLY_WARRIOR ;
+            this.game.mapManager.food -= Math.ceil(this.targetEnemy.warriorCount * CONFIG.FOOD_AMOUNT_FOR_SALLY_WARRIOR);
+            this.game.mapManager.safe -= this.targetEnemy.warriorCount;
         }
-        this.setVisible(false);
         playSE002_Button();
         this.setVisible(false);
     },
