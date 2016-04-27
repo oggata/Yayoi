@@ -85,7 +85,5 @@ var Footer = cc.Node.extend({
         this.footerNode.addChild(menu001);
     },
 
-    update: function() {
-
-    },
+    update: function() {},
 });

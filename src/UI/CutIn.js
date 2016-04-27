@@ -13,16 +13,16 @@ var CutIn = cc.Node.extend(
         this._super();
         this.effectTime = 0;
         this.game = game;
-
+/*
         this.bgLayer = cc.LayerColor.create(new cc.Color(0, 0, 0, 255 * 0.2), 640, 1400);
         this.addChild(this.bgLayer);
-
+*/
         //Himiko_png
         this.himikoSprite = cc.Sprite.create(res.Himiko_png);
         this.addChild(this.himikoSprite);
         this.himikoSprite.setPosition(600, this.game.viewSize.height / 2 - 70);
 
-        this.messageSprite = cc.Sprite.create(res.Message1_png);
+        this.messageSprite = cc.Sprite.create(res.Window_Message_png);
         this.messageSprite.setPosition(320,this.game.viewSize.height/2);
         this.addChild(this.messageSprite);
 
@@ -42,10 +42,7 @@ var CutIn = cc.Node.extend(
         this.messageSprite.addChild(menu);
 
         this.setCutInVisible(false);
-/*
-        var _posY = this.game.header.getPosition().y - 250;
-        this.setPosition(0,_posY);
-*/
+
         this.tmpPosY = this.getPosition().y;
         this.spriteOpacity = 0;
 

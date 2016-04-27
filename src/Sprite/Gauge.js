@@ -18,7 +18,6 @@ var Gauge = cc.Node.extend({
         rectBack.setPosition(1, 1);
         this.addChild(rectBack, 2);
         var colorCode = new cc.Color(255, 255, 255, 255);
-
         if (color == "food") {
             colorCode = new cc.Color(255, 20, 147, 255);
         }
@@ -28,7 +27,6 @@ var Gauge = cc.Node.extend({
         if (color == "safe") {
             colorCode = new cc.Color(0, 255, 0, 255);
         }
-
         if (color == "red") {
             colorCode = new cc.Color(255, 0, 0, 255);
         }
@@ -48,6 +46,7 @@ var Gauge = cc.Node.extend({
     },
     init: function() {},
     update: function(scaleNum) {
+        scaleNum = scaleNum || 0;
         this.rectBar.setScale(scaleNum, 1);
     },
 });
