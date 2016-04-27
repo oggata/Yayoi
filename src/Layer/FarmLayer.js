@@ -80,14 +80,13 @@ var FarmLayer = cc.Layer.extend({
 
         //経過時間の少数だけを取る
         var _pastTimeRate = this.mapManager.pastCycle - Math.floor(this.mapManager.pastCycle);
-
         if (this.mapManager.pastCycle >= 1) {
             this.mapManager.calcPastTime1(this.mapManager.pastCycle, "background");
         } else {
             this.mapManager.calcPastTime2();
         }
 
-        this.cycleTimeRate = _pastTimeRate; //30 * CONFIG.CYCLE_SECOND
+        this.cycleTimeRate = _pastTimeRate;
         this.cycleTime = 30 * CONFIG.CYCLE_SECOND * _pastTimeRate;
         this.mapManager.setPositionByMapChip(421);
 
@@ -110,19 +109,20 @@ var FarmLayer = cc.Layer.extend({
         this.lastTouchGameLayerX = this.baseNode.getPosition().x;
         this.lastTouchGameLayerY = this.baseNode.getPosition().y;
 
-        this.setUI();
+        this.setInitializeUI();
+        this.updateCnt = 0;
 
-        if(this.mapManager.population >= 15){
+        if (this.storage.tutorialNum >= 5 || this.mapManager.population >= 15) {
             this.mapManager.renderItems(0, 0, 0, 3);
         }
         this.scheduleUpdate();
         return true;
     },
 
-    setUI: function() {
+    setInitializeUI: function() {
         this.ActionWindow = new Action(this);
         this.addChild(this.ActionWindow);
-        this.ActionWindow.setPosition(100,200);
+        this.ActionWindow.setPosition(100, 200);
         this.ActionWindow.setVisible(false);
 
         this.lvManage = new LevelManage();
@@ -137,9 +137,9 @@ var FarmLayer = cc.Layer.extend({
         this.addChild(this.setBuilding);
         this.setBuilding.setPosition(320, 150);
 
-        this.buildingInfo = new InfoBuilding();
-        this.addChild(this.buildingInfo);
-        this.buildingInfo.setVisible(false);
+        this.infoBuilding = new InfoBuilding();
+        this.addChild(this.infoBuilding);
+        this.infoBuilding.setVisible(false);
 
         this.targetItem = cc.Sprite.create(res.Map_Target_Ok_png);
         this.targetItem.retain();
@@ -192,7 +192,7 @@ var FarmLayer = cc.Layer.extend({
         return this.storage.itemLibraries[1];
     },
 
-    moveTouchedMarker:function(touchX,touchY){
+    moveTouchedMarker: function(touchX, touchY) {
         for (var i = 0; i < this.mapChips.length; i++) {
             if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
                 var _x = this.mapChips[i].getPosition().x;
@@ -206,7 +206,7 @@ var FarmLayer = cc.Layer.extend({
         }
     },
 
-    getTouchedEnemy: function(touchX,touchY){
+    getTouchedEnemy: function(touchX, touchY) {
         for (var i = 0; i < this.mapChips.length; i++) {
             if (!this.mapChips[i]) return;
             if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
@@ -221,13 +221,12 @@ var FarmLayer = cc.Layer.extend({
         return null;
     },
 
-    getTouchedBuilding: function(touchX,touchY)
-    {
+    getTouchedBuilding: function(touchX, touchY) {
         for (var i = 0; i < this.mapChips.length; i++) {
             if (!this.mapChips[i]) return;
             if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
                 var _chkMapId = this.mapChips[i].mapId;
-                if(this.mapChips[i].itemData){
+                if (this.mapChips[i].itemData) {
                     return this.mapChips[i].itemData;
                 }
             }
@@ -235,26 +234,38 @@ var FarmLayer = cc.Layer.extend({
         return null;
     },
 
-    getTouchedMapChip: function(touchX,touchY)
-    {
+    getTouchedMapChip: function(touchX, touchY) {
         for (var i = 0; i < this.mapChips.length; i++) {
             if (!this.mapChips[i]) return;
             if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
                 var _chkMapId = this.mapChips[i].mapId;
-                if(this.mapChips[i]){
+                if (this.mapChips[i]) {
                     return this.mapChips[i];
                 }
             }
         }
         return null;
     },
-
-    setBuildingToTouchedPosition: function(mapChip)
-    {
-        this.targetItem.setOpacity(0.5 * 255);   
+    /*
+        getTouchedWorld: function(touchX,touchY)
+        {
+            for (var i = 0; i < this.mapChips.length; i++) {
+                if (!this.mapChips[i]) return;
+                if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
+                    var _chkMapId = this.mapChips[i].mapId;
+                    if(this.mapChips[i]){
+                        return this.mapChips[i];
+                    }
+                }
+            }
+            return null;
+        },
+    */
+    setBuildingToTouchedPosition: function(mapChip) {
+        this.targetItem.setOpacity(0.5 * 255);
         //<--------1個前のmapIDと押下したmapIDが同じだったら設置する-------->
         if (this.pushedMapId == mapChip.mapId) {
-//this.mapManager.setPositionByMapChip(mapChip.mapId);
+            //this.mapManager.setPositionByMapChip(mapChip.mapId);
             this.setBuilding.mapChip = mapChip;
             this.setBuilding.itemData = this.hasItemData;
             this.setBuilding.setVisible(true);
@@ -283,65 +294,58 @@ var FarmLayer = cc.Layer.extend({
         var touchY = location.y - this.lastTouchGameLayerY;
 
         this.ActionWindow.setVisible(false);
-        this.moveTouchedMarker(touchX,touchY);
+        this.moveTouchedMarker(touchX, touchY);
         this.ActionWindow.targetMapChip = null;
         this.ActionWindow.targetEnemy = null;
         this.ActionWindow.targetBuilding = null;
-        var mapChip = this.getTouchedMapChip(touchX,touchY);
-        if(mapChip != null)
-        {
+        var mapChip = this.getTouchedMapChip(touchX, touchY);
+        if (mapChip != null) {
             this.ActionWindow.type = "destroy";
             this.ActionWindow.targetMapChip = mapChip;
         }
 
-        var enemy = this.getTouchedEnemy(touchX,touchY);
-        if(enemy != null)
-        {
+        var enemy = this.getTouchedEnemy(touchX, touchY);
+        if (enemy != null) {
             this.ActionWindow.setVisible(true);
             this.ActionWindow.type = "attack";
             this.ActionWindow.targetEnemy = enemy;
-            this.buildingInfo.setInfo(enemy.name,enemy.description);
+            this.infoBuilding.setInfo(enemy.name, enemy.description);
         }
 
-        var building = this.getTouchedBuilding(touchX,touchY);
-        if(building != null)
-        {
+        var building = this.getTouchedBuilding(touchX, touchY);
+        if (building != null) {
             this.ActionWindow.setVisible(true);
             this.ActionWindow.targetBuilding = building;
 
-            this.buildingInfo.setInfo(building.name,building.description);
+            this.infoBuilding.setInfo(building.name, building.description);
 
-            if(building["house"] > 0)
-            {
+            if (building["house"] > 0) {
                 this.ActionWindow.type = "add_population";
-            }else{
+            } else {
                 this.ActionWindow.type = "destroy";
             }
         }
 
         if (this.hasItemData != null) {
             //設置可能な場所かどうか確認する
-            var mapChip = this.getTouchedMapChip(touchX,touchY);
-            if(mapChip != null)
-            {
-                if(mapChip.confNum)
-                {
-                    if(mapChip.confNum == 3)
-                    {
+            var mapChip = this.getTouchedMapChip(touchX, touchY);
+            if (mapChip != null) {
+                if (mapChip.confNum) {
+                    if (mapChip.confNum == 3) {
                         this.setBuildingToTouchedPosition(mapChip);
-                    }else{
+                    } else {
                         this.targetItem.setOpacity(0.5 * 255);
                     }
                 }
             }
             this.ActionWindow.setVisible(false);
-            this.buildingInfo.setVisible(false);
+            this.infoBuilding.setVisible(false);
         }
 
         if (this.hasItemData != null || this.shop.selectedItemId != null || building != null || enemy != null) {
-            this.buildingInfo.setVisible(true);
+            this.infoBuilding.setVisible(true);
         } else {
-            this.buildingInfo.setVisible(false);
+            this.infoBuilding.setVisible(false);
         }
     },
 
@@ -361,7 +365,7 @@ var FarmLayer = cc.Layer.extend({
         var y = this.lastTouchGameLayerY - scrollY;
         this.baseNode.setPosition(x, y);
         this.ActionWindow.setVisible(false);
-        this.buildingInfo.setVisible(false);
+        this.infoBuilding.setVisible(false);
     },
 
     touchFinish: function(location) {
@@ -378,14 +382,7 @@ var FarmLayer = cc.Layer.extend({
         this.lastTouchGameLayerY = this.baseNode.getPosition().y;
     },
 
-    update: function(dt) {
-        if (this.isReadyToRenderMap == true) {
-            this.isReadyToRenderMap = false;
-            this.mapManager.renderWorld();
-        }
-
-        this.introduction.update();
-        if (this.introduction.isVisible()) return;
+    uiUpdate: function() {
 
         this.mapManager.update();
 
@@ -398,6 +395,18 @@ var FarmLayer = cc.Layer.extend({
         this.footer.update();
 
         this.ActionWindow.update();
+    },
+
+    update: function(dt) {
+        if (this.isReadyToRenderMap == true) {
+            this.isReadyToRenderMap = false;
+            this.mapManager.renderWorld();
+        }
+
+        this.introduction.update();
+        if (this.introduction.isVisible()) return;
+
+        this.uiUpdate();
 
         this.cycleTime += 1;
         this.cycleTimeByTerm += 1;
@@ -409,17 +418,13 @@ var FarmLayer = cc.Layer.extend({
             if (this.mapManager.waitPopulation >= 1) {
                 this.mapManager.waitPopulation -= 1;
                 this.mapManager.population += 1;
-                this.mapManager.increasePopulationCount+=1;
-                this.footer.populationLabel.setString(this.mapManager.waitPopulation);
-
+                this.mapManager.increasePopulationCount += 1;
                 var _housePosArray = this.mapManager.housePositions;
                 var shuffle = function() {
                     return Math.random() - .5
                 };
                 _housePosArray.sort(shuffle)
                 this.addEffectByMapChip(_housePosArray[0].mapId, "hart");
-            } else {
-                this.footer.populationLabel.setString(this.mapManager.waitPopulation);
             }
             this.mapManager.saveData();
         }
@@ -437,6 +442,9 @@ var FarmLayer = cc.Layer.extend({
         }
         if (_visiblePopulation >= CONFIG.VISIBLE_MAX_PEOPLE_CNT) {
             _visiblePopulation = CONFIG.VISIBLE_MAX_PEOPLE_CNT;
+        }
+        if (this.mapManager.population <= 3) {
+            _visiblePopulation = this.mapManager.population
         }
 
         if (this.humans.length < _visiblePopulation) {
@@ -476,7 +484,7 @@ var FarmLayer = cc.Layer.extend({
 
         for (var i = 0; i < this.enemies.length; i++) {
             if (this.enemies[i].update() == false) {
-                this.mapManager.killedEnemyCount+=1;
+                this.mapManager.killedEnemyCount += 1;
                 this.mapManager.amount += this.enemies[i].reward;
                 this.addEffectByMapChip(this.enemies[i].mapId, "money");
                 this.baseNode.removeChild(this.enemies[i]);
@@ -489,36 +497,11 @@ var FarmLayer = cc.Layer.extend({
             }
         }
 
-        for (var i = 0; i < this.mapChips.length; i++) {
-            if (this.mapChips[i]) {
-                this.mapChips[i].update();
-                this.baseNode.reorderChild(
-                    this.mapChips[i],
-                    Math.floor(999999 - this.mapChips[i].getPosition().y)
-                );
-            }
-        }
-
         for (var i = 0; i < this.items.length; i++) {
             this.baseNode.reorderChild(
                 this.items[i],
                 Math.floor(9999999 - this.items[i].getPosition().y)
             );
-        }
-
-        //人 x 人
-        for (var m = 0; m < this.humans.length; m++) {
-            for (var n = 0; n < this.humans.length; n++) {
-                if (this.humans[m] != this.humans[n]) {
-                    var dX = this.humans[m].getPosition().x - this.humans[n].getPosition().x;
-                    var dY = this.humans[m].getPosition().y - this.humans[n].getPosition().y;
-                    var dist = Math.sqrt(dX * dX + dY * dY);
-                    if (dist <= 12) {
-                        this.humans[m].setPosition(this.humans[m].getPosition().x + dX / 5, this.humans[m].getPosition().y + dY / 5);
-                        this.humans[n].setPosition(this.humans[n].getPosition().x - dX / 5, this.humans[n].getPosition().y - dY / 5);
-                    }
-                }
-            }
         }
 
         //人 x 敵
@@ -538,7 +521,7 @@ var FarmLayer = cc.Layer.extend({
                         if (this.humans[m].deadCnt == 0) {
                             this.humans[m].deadCnt = 1;
                             this.mapManager.setPositionByMapChip(this.humans[m].targetMarker.mapId);
-                            this.mapManager.killedPopulationCount+=1;
+                            this.mapManager.killedPopulationCount += 1;
                         }
                     } else {
                         this.humans[m].stopCount = 1;
@@ -548,21 +531,51 @@ var FarmLayer = cc.Layer.extend({
             }
         }
 
-        //人 x 食料
-        for (var m = 0; m < this.humans.length; m++) {
-            for (var n = 0; n < this.mapChips.length; n++) {
-                var dX = this.humans[m].getPosition().x - this.mapChips[n].getPosition().x;
-                var dY = this.humans[m].getPosition().y - (this.mapChips[n].getPosition().y + 70);
-                var dist = Math.sqrt(dX * dX + dY * dY);
-                if (dist <= 30 && this.humans[m].type == 1) {
-                    if (this.mapChips[n].itemData) {
-                        if (this.mapChips[n].itemData["food"] > 0 && this.mapChips[n].isFoodAvailable == true) {
-                            this.humans[m].stopCount = 1;
-                            this.mapChips[n].foodCount += 1;
-                            if (this.mapChips[n].foodCount >= 100) {
-                                this.mapManager.food += this.mapChips[n].itemData["food"];
-                                this.mapChips[n].isFoodAvailable = false;
-                                this.mapManager.gotFoodCount += 1;
+        this.updateCnt++;
+        if (this.updateCnt >= 10) {
+            this.updateCnt = 0;
+
+            //人 x 人
+            for (var m = 0; m < this.humans.length; m++) {
+                for (var n = 0; n < this.humans.length; n++) {
+                    if (this.humans[m] != this.humans[n]) {
+                        var dX = this.humans[m].getPosition().x - this.humans[n].getPosition().x;
+                        var dY = this.humans[m].getPosition().y - this.humans[n].getPosition().y;
+                        var dist = Math.sqrt(dX * dX + dY * dY);
+                        if (dist <= 12) {
+                            this.humans[m].setPosition(this.humans[m].getPosition().x + dX / 5, this.humans[m].getPosition().y + dY / 5);
+                            this.humans[n].setPosition(this.humans[n].getPosition().x - dX / 5, this.humans[n].getPosition().y - dY / 5);
+                        }
+                    }
+                }
+            }
+
+            for (var i = 0; i < this.mapChips.length; i++) {
+                if (this.mapChips[i]) {
+                    this.mapChips[i].update();
+                    this.baseNode.reorderChild(
+                        this.mapChips[i],
+                        Math.floor(999999 - this.mapChips[i].getPosition().y)
+                    );
+                }
+            }
+
+            //人 x 食料
+            for (var m = 0; m < this.humans.length; m++) {
+                for (var n = 0; n < this.mapChips.length; n++) {
+                    var dX = this.humans[m].getPosition().x - this.mapChips[n].getPosition().x;
+                    var dY = this.humans[m].getPosition().y - (this.mapChips[n].getPosition().y + 70);
+                    var dist = Math.sqrt(dX * dX + dY * dY);
+                    if (dist <= 30 && this.humans[m].type == 1) {
+                        if (this.mapChips[n].itemData) {
+                            if (this.mapChips[n].itemData["food"] > 0 && this.mapChips[n].isFoodAvailable == true) {
+                                this.humans[m].stopCount = 1;
+                                this.mapChips[n].foodCount += 1;
+                                if (this.mapChips[n].foodCount >= 100 / 10) {
+                                    this.mapManager.food += this.mapChips[n].itemData["food"];
+                                    this.mapChips[n].isFoodAvailable = false;
+                                    this.mapManager.gotFoodCount += 1;
+                                }
                             }
                         }
                     }
@@ -573,9 +586,8 @@ var FarmLayer = cc.Layer.extend({
         //いまisFoodAvailable=trueのものだけ配列にいれて管理する
         this.mapManager.foodAvailableList = [];
         for (var n = 0; n < this.mapChips.length; n++) {
-            if(this.mapChips[n].itemData){
-                if(this.mapChips[n].isFoodAvailable == true && this.mapChips[n].itemData["food"] > 0)
-                {
+            if (this.mapChips[n].itemData) {
+                if (this.mapChips[n].isFoodAvailable == true && this.mapChips[n].itemData["food"] > 0) {
                     this.mapManager.foodAvailableList.push(this.mapChips[n]);
                 }
             }
@@ -660,10 +672,9 @@ var FarmLayer = cc.Layer.extend({
         }
     },
 
-    isExistsItemKey: function(itemKey){
-        for (var i=0 ; i<=this.storage.itemLibraries.length ; i++){
-            if(this.storage.itemLibraries[i]["id"] == itemKey)
-            {
+    isExistsItemKey: function(itemKey) {
+        for (var i = 0; i <= this.storage.itemLibraries.length; i++) {
+            if (this.storage.itemLibraries[i]["id"] == itemKey) {
                 return true;
             }
             return true;
@@ -690,7 +701,7 @@ var getRandNumberFromRange = function(min, max) {
 String.prototype.format = function() {
     var formatted = this;
     for (var i = 0; i < arguments.length; i++) {
-        var regexp = new RegExp('\\{'+i+'\\}', 'gi');
+        var regexp = new RegExp('\\{' + i + '\\}', 'gi');
         formatted = formatted.replace(regexp, arguments[i]);
     }
     return formatted;

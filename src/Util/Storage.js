@@ -12,9 +12,9 @@ var Storage = cc.Class.extend(
     {
         this.clearedStageData = new Object();
         this.playerName = "xxxxx";
-        this.population = 5;
+        this.population = 1;
         this.tutorialNum = 1;
-        this.amount = 500;
+        this.amount = 100;
         this.sumPastCycle = 0;
         this.food = 0;
         this.safe = 0;
@@ -95,8 +95,8 @@ var Storage = cc.Class.extend(
             {"id":"f_i009_lv1_a90","lv":1,"name" :"",               "description":"","item":"res/f_009.png","map_chip":"res/f_i009_lv1_a90.png","food":0,  "maxFood":0, "house":0,  "safe":0, "amount":100 ,"maxAmount" : 0,"maxAmount" : 0},
            
             {"id":"h_i001_lv1_a90","lv":1,"name" :"住居A",          "description":"住居+5人 備蓄+5","item":"res/h_001.png","map_chip":"res/h_i001_lv1_a90.png","food":0, "maxFood":5,  "house":5,  "safe":0, "amount":100,"maxAmount" : 0},
-            {"id":"h_i002_lv1_a90","lv":1,"name" :"住居B",          "description":"住居+10人 備蓄+10","item":"res/h_002.png","map_chip":"res/h_i002_lv1_a90.png","food":0, "maxFood":10,  "house":10,  "safe":0, "amount":200,"maxAmount" : 0},
-            {"id":"h_i003_lv1_a90","lv":1,"name" :"住居C",          "description":"住居+15人 備蓄+15","item":"res/h_003.png","map_chip":"res/h_i003_lv1_a90.png","food":0, "maxFood":15,  "house":15,  "safe":0, "amount":300,"maxAmount" : 0},
+            {"id":"h_i002_lv1_a90","lv":1,"name" :"住居B",          "description":"住居+8人 備蓄+8","item":"res/h_002.png","map_chip":"res/h_i002_lv1_a90.png","food":0, "maxFood":8,  "house":8,  "safe":0, "amount":200,"maxAmount" : 0},
+            {"id":"h_i003_lv1_a90","lv":1,"name" :"住居C",          "description":"住居+12人 備蓄+12","item":"res/h_003.png","map_chip":"res/h_i003_lv1_a90.png","food":0, "maxFood":12,  "house":12,  "safe":0, "amount":300,"maxAmount" : 0},
             {"id":"h_i004_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_004.png","map_chip":"res/h_i004_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
             {"id":"h_i005_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_005.png","map_chip":"res/h_i005_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
             {"id":"h_i006_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_006.png","map_chip":"res/h_i006_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
@@ -104,7 +104,7 @@ var Storage = cc.Class.extend(
             {"id":"h_i008_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_008.png","map_chip":"res/h_i008_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
             {"id":"h_i009_lv1_a90","lv":1,"name" :"","description":"","item":"res/h_009.png","map_chip":"res/h_i009_lv1_a90.png","food":0, "maxFood":0,  "house":0,  "safe":0, "amount":100,"maxAmount" : 0},
             
-            {"id":"s_i001_lv1_a90","lv":1,"name" :"警備用建物",      "description":"治安+10","item":"res/s_001.png","map_chip":"res/s_i001_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":3, "amount":100,"maxAmount" : 0},
+            {"id":"s_i001_lv1_a90","lv":1,"name" :"みはり台",      "description":"治安+10","item":"res/s_001.png","map_chip":"res/s_i001_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":3, "amount":100,"maxAmount" : 0},
             {"id":"s_i002_lv1_a90","lv":1,"name" :"ものみやぐらA",   "description":"治安+20","item":"res/s_002.png","map_chip":"res/s_i002_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":6, "amount":200,"maxAmount" : 0},
             {"id":"s_i003_lv1_a90","lv":1,"name" :"ものみやぐらB",   "description":"治安+30","item":"res/s_003.png","map_chip":"res/s_i003_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":9, "amount":300,"maxAmount" : 0},
             {"id":"s_i004_lv1_a90","lv":1,"name" :"ものみやぐらB",   "description":"治安+30","item":"res/s_004.png","map_chip":"res/s_i004_lv1_a90.png","food":0, "maxFood":0,  "house":0,   "safe":0, "amount":300,"maxAmount" : 0},

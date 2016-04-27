@@ -13,7 +13,8 @@ var Enemy = cc.Node.extend({
         this.mapId = null;
         this.image = res.Effect_Enemy2_png;
         this.initializeWalkAnimation();
-        this.warriorCount = getRandNumberFromRange(3,5);
+        //this.warriorCount = getRandNumberFromRange(3,5);
+        this.warriorCount = 3;
         this.hp = 150 * this.warriorCount;
         this.maxHp = 150 * this.warriorCount;
         this.reward = 8 * this.warriorCount;

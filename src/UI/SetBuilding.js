@@ -20,8 +20,6 @@ var SetBuilding = cc.Node.extend({
         this.setVisible(false);
 
         var okButton = new cc.MenuItemImage(res.Button_Ok_png, res.Button_Ok_On_png, function() {
-            //this.game.targetOkSprite.setVisible(false);
-            //this.game.targetNgSprite.setVisible(false);
             this.game.targetItem.setOpacity(0 * 255);
             if(this.game.hasItemData["id"] && this.game.hasItemData["amount"])
             {
@@ -43,8 +41,6 @@ var SetBuilding = cc.Node.extend({
         okButton.setPosition(-60, 45);
 
         var ngButton = new cc.MenuItemImage(res.Button_Ng_png, res.Button_Ng_On_png, function() {
-            //this.game.targetOkSprite.setVisible(false);
-            //this.game.targetNgSprite.setVisible(false);
             this.game.targetItem.setOpacity(0 * 255);
             this.game.hasItemData = null;
             this.game.isReadyToRenderMap = true;
@@ -54,7 +50,6 @@ var SetBuilding = cc.Node.extend({
 
         this.messageLabel = cc.LabelTTF.create("", "Arial", 22);
         this.messageLabel.setFontFillColor(new cc.Color(0, 0, 0, 255));
-        //this.messageLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
         this.messageLabel.setAnchorPoint(0.5, 0.5);
         this.base.addChild(this.messageLabel);
         this.messageLabel.setPosition(200,120);

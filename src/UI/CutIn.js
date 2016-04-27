@@ -13,10 +13,10 @@ var CutIn = cc.Node.extend(
         this._super();
         this.effectTime = 0;
         this.game = game;
-
+/*
         this.bgLayer = cc.LayerColor.create(new cc.Color(0, 0, 0, 255 * 0.2), 640, 1400);
         this.addChild(this.bgLayer);
-
+*/
         //Himiko_png
         this.himikoSprite = cc.Sprite.create(res.Himiko_png);
         this.addChild(this.himikoSprite);

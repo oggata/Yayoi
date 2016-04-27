@@ -25,25 +25,11 @@ var Action = cc.Node.extend({
         this.bgLayer.addChild(this.messageLabel);
         this.messageLabel.setPosition(100, 100);
 
-/*
-        this.titleLabel = cc.LabelTTF.create("", "Arial", 28);
-        this.titleLabel.setFontFillColor(new cc.Color(0, 0, 0, 255));
-        this.titleLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
-        this.bgLayer.addChild(this.titleLabel);
-        this.titleLabel.setPosition(100, 100);
-
-        this.infoLabel = cc.LabelTTF.create("", "Arial", 28);
-        this.infoLabel.setFontFillColor(new cc.Color(0, 0, 0, 255));
-        this.infoLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
-        this.bgLayer.addChild(this.infoLabel);
-        this.infoLabel.setPosition(100, 100);
-*/
-
+        //destroy button
         this.destroyButton = new cc.MenuItemImage(res.Button_Destroy_png, res.Button_Destroy_On_png, function() {
             this.doReset();
         }, this);
         this.destroyButton.setPosition(100,0);
-
         this.destroyButtonDisable = cc.Sprite.create(res.Button_Action_Disable_png);
         this.destroyButton.addChild(this.destroyButtonDisable);
         this.destroyButtonDisable.setAnchorPoint(0,0);
@@ -55,14 +41,11 @@ var Action = cc.Node.extend({
         this.window_description.addChild(this.destroyMessageLabel);
         this.destroyMessageLabel.setPosition(80, 15);
 
-
         //attack button
         this.attackButton = new cc.MenuItemImage(res.Button_Attack_png, res.Button_Attack_On_png, function() {
             this.doAttack();
         }, this);
         this.attackButton.setPosition(200,0);
-
-
         this.attackButtonDisable = cc.Sprite.create(res.Button_Action_Disable_png);
         this.attackButton.addChild(this.attackButtonDisable);
         this.attackButtonDisable.setAnchorPoint(0,0);
@@ -74,7 +57,7 @@ var Action = cc.Node.extend({
         this.window_description.addChild(this.attackMessageLabel);
         this.attackMessageLabel.setPosition(80, 15);
 
-
+        //add people button
         this.addPeopleButton = new cc.MenuItemImage(res.Button_Add_People_png, res.Button_Add_People_On_png, function() {
             this.addPopulation();
         }, this);
@@ -84,16 +67,12 @@ var Action = cc.Node.extend({
         this.window_description.setPosition(50,-10);
         this.peopleMessageLabel = cc.LabelTTF.create("", "Arial", 24);
         this.peopleMessageLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
-        //this.peopleMessageLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
         this.window_description.addChild(this.peopleMessageLabel);
         this.peopleMessageLabel.setPosition(80, 15);
-
-
         this.populationLabel = cc.LabelTTF.create("", "Arial", 42);
         this.populationLabel.setFontFillColor(new cc.Color(0, 0, 0, 255));
         this.addPeopleButton.addChild(this.populationLabel);
         this.populationLabel.setPosition(50, 50);
-
         this.populationButtonDisable = cc.Sprite.create(res.Button_Action_Disable_png);
         this.addPeopleButton.addChild(this.populationButtonDisable);
         this.populationButtonDisable.setAnchorPoint(0,0);
@@ -108,6 +87,7 @@ var Action = cc.Node.extend({
     },
 
     update: function() {
+        
         if(this.game.mapManager.amount >= 20)
         {
             this.destroyButtonDisable.setVisible(false);
@@ -115,9 +95,13 @@ var Action = cc.Node.extend({
             this.destroyButtonDisable.setVisible(true);
         }
 
-        if(this.game.mapManager.food >= CONFIG.FOOD_AMOUNT_FOR_HAVE_PERSON)
-        {
-            this.populationButtonDisable.setVisible(false);
+        if(this.game.mapManager.food >= CONFIG.FOOD_AMOUNT_FOR_HAVE_PERSON ){
+            if(this.game.mapManager.maxHouse * 2 > this.game.mapManager.population){
+                //食料が一定以上で、居住容量があれば追加できる.
+                this.populationButtonDisable.setVisible(false);
+            }else{
+                this.populationButtonDisable.setVisible(true);
+            }
         }else{
             this.populationButtonDisable.setVisible(true);
         }
@@ -129,11 +113,6 @@ var Action = cc.Node.extend({
             this.addPeopleButton.setVisible(false);
             this.destroyButton.setPosition(220,0);
             this.destroyMessageLabel.setString("x20");
-            if(this.game.mapManager.amount < 20){
-                this.populationButtonDisable.setVisible(true);
-            }else{
-                this.populationButtonDisable.setVisible(false);
-            }
         }else if(this.type == "attack")
         {
             this.destroyButton.setVisible(false);
@@ -143,7 +122,7 @@ var Action = cc.Node.extend({
             this.attackMessageLabel.setString("x" + this.targetEnemy.warriorCount * CONFIG.FOOD_AMOUNT_FOR_SALLY_WARRIOR);
             if(this.game.mapManager.safe < this.targetEnemy.warriorCount){
                 this.attackButtonDisable.setVisible(true);
-            }else if(this.enemy.warriorCount * CONFIG.FOOD_AMOUNT_FOR_SALLY_WARRIOR < this.game.mapManager.food)
+            }else if( Math.ceil(this.targetEnemy.warriorCount * CONFIG.FOOD_AMOUNT_FOR_SALLY_WARRIOR) > this.game.mapManager.food)
             {
                 this.attackButtonDisable.setVisible(true);
             }else{
@@ -158,20 +137,13 @@ var Action = cc.Node.extend({
             this.destroyButton.setPosition(220 - 60,0);
             this.addPeopleButton.setPosition(220 + 60,0);
             this.destroyMessageLabel.setString("x20");
-            this.peopleMessageLabel.setString("x5");
-            if(this.game.mapManager.food < CONFIG.FOOD_AMOUNT_FOR_HAVE_PERSON ){
-                this.populationButtonDisable.setVisible(true);
-            }else{
-                this.populationButtonDisable.setVisible(false);
-            }
+            this.peopleMessageLabel.setString("X" + CONFIG.FOOD_AMOUNT_FOR_HAVE_PERSON);
         }
     },
 
     doAttack : function()
     {
-        if(this.game.mapManager.safe < this.targetEnemy.warriorCount) return;
-        if(this.enemy.warriorCount * CONFIG.FOOD_AMOUNT_FOR_SALLY_WARRIOR < this.game.mapManager.food) return;
-
+        if(this.attackButtonDisable.isVisible()) return;
         var _minDist = 99999;
         var _housePosition = null;
         for (var h = 0; h < this.game.mapManager.safePositions.length; h++) {
@@ -201,19 +173,17 @@ var Action = cc.Node.extend({
 
     doReset : function()
     {
-        if(this.game.mapManager.amount >= 20){
-            this.game.resetWindow.targetMapChip = this.targetMapChip;
-            this.game.resetWindow.setVisible(true);
-            this.setVisible(false);
-        }
+        if(this.destroyButtonDisable.isVisible()) return;
+        this.game.resetWindow.targetMapChip = this.targetMapChip;
+        this.game.resetWindow.setVisible(true);
+        this.setVisible(false);
     },
 
     addPopulation : function()
     {
-        if(this.game.mapManager.food >= CONFIG.FOOD_AMOUNT_FOR_HAVE_PERSON){
-            this.game.mapManager.waitPopulation+=1;
-            this.game.mapManager.food -= CONFIG.FOOD_AMOUNT_FOR_HAVE_PERSON;
-        }
+        if(this.populationButtonDisable.isVisible()) return;
+        this.game.mapManager.waitPopulation+=1;
+        this.game.mapManager.food -= CONFIG.FOOD_AMOUNT_FOR_HAVE_PERSON;
     }
 
 });

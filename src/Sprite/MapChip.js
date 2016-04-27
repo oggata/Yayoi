@@ -15,7 +15,7 @@ var MapChip = cc.Node.extend({
         this.isFoodAvailable = false;
         this.foodCount = 0;
         this.growingCount = 0;
-        this.maxGrowingCount = getRandNumberFromRange(30*20,30*40);
+        this.maxGrowingCount = Math.ceil(getRandNumberFromRange(30*20,30*40)/10);
         this.confNum = confNum;
 
         if (confNum == 2) {
@@ -37,17 +37,18 @@ var MapChip = cc.Node.extend({
             this.itemData = itemData;
             this.isFoodAvailable = true;
         } else if (itemData["map_chip"]) {
-            this.baseSprite = cc.Sprite.create(res.Food_Base_Sprite_png);
-            this.baseSprite.setAnchorPoint(0.5, 0);
-            this.addChild(this.baseSprite);
 
             this.sprite = cc.Sprite.create(itemData["map_chip"]);
             this.sprite.setAnchorPoint(0.5, 0);
             this.addChild(this.sprite);
             this.itemData = itemData;
 
-            if(this.itemData["food"] > 0){
+            if(itemData["food"] > 0){
+                this.baseSprite = cc.Sprite.create(res.Food_Base_Sprite_png);
+                this.baseSprite.setAnchorPoint(0.5, 0);
+                this.addChild(this.baseSprite);
                 this.isFoodAvailable = false;
+                this.sprite.setVisible(false);
             }else{
                 this.isFoodAvailable = true;
             }

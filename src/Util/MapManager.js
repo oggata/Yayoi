@@ -57,17 +57,21 @@ var MapManager = cc.Node.extend({
 
     calcPastTime2: function() {
         this.calcRate();
-
         this.renderGauge();
     },
 
     calcPastTime1: function(_pastCycle, type) {
         for (var i = 0; i < _pastCycle; i++) {
+            if(type == "background")
+            {
+                var _rand = getRandNumberFromRange(0,2);
+                this.increasePopulationCount += _rand;
+                this.population += _rand;
+            }
         }
         this.sumPastCycle += _pastCycle;
         this.setMessage(this.sumPastCycle);
-        //this.renderItems(0, 0, 0, getRandNumberFromRange(1, 4));
-        if(this.population >= 15){
+        if(this.game.storage.tutorialNum >=5 || this.population >= 15){
             this.renderItems(0, 0, 0, 3);
         }
         //リセットする
@@ -331,7 +335,7 @@ var MapManager = cc.Node.extend({
         this.house = 0;
         this.maxFood = 0;
         this.maxHouse = 0;
-        this.safe = 0;
+        //this.safe = 0;
         this.maxSafe = 0;
         this.foodRate = 0;
         this.houseRate = 0;
@@ -366,7 +370,7 @@ var MapManager = cc.Node.extend({
                         this.mapChip.itemData = itemData;
                         if(this.population <= 15)
                         {
-                            this.mapChip.maxGrowingCount = getRandNumberFromRange(30*5,30*10)
+                            this.mapChip.maxGrowingCount = Math.ceil(getRandNumberFromRange(30*5,30*10)/10);
                         }
 
                         if (itemData != null) {
@@ -454,8 +458,8 @@ var MapManager = cc.Node.extend({
             this.safeRate = 0;
         }
 
-        if (this.population <= 5) {
-            this.population = 5;
+        if (this.population <= 1) {
+            this.population = 1;
         }
         if (this.population >= 9999) {
             this.population = 9999;

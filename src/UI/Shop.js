@@ -11,38 +11,32 @@ var Shop = cc.Node.extend({
         this._super();
 
         this.items = [];
-
         this.selectedItemId = null;
-
-        this.pos_f = ["f_i001_lv1_a90", null, null, "f_i004_lv1_a90", "f_i005_lv1_a90", null, null, null, null];
-        this.pos_h = ["h_i001_lv1_a90", "h_i002_lv1_a90", "h_i003_lv1_a90", null, null, null, null, null, null];
-        this.pos_s = ["s_i001_lv1_a90", "s_i002_lv1_a90", "s_i003_lv1_a90", null, null, null, null, null, null];
-
         this.settingLayer = cc.LayerColor.create(new cc.Color(0, 0, 0, 255 * 0.8), 640, 1500);
         this.settingLayer.setPosition(-320, -1136 / 2);
         this.settingLayer.setAnchorPoint(0.5, 0.5);
         this.addChild(this.settingLayer);
 
-        this.settingWindow = cc.Sprite.create(res.Setting_Window_png);
+        this.settingWindow = cc.Sprite.create(res.Window_Setting_png);
         this.addChild(this.settingWindow);
 
-        var menu001Button = new cc.MenuItemImage(res.Button_Setting_Menu_001_png, res.Button_Setting_Menu_001_png, function() {
-            this.refresh_items(this.pos_f, calledLayer);
+        var menu001Button = new cc.MenuItemImage(res.Button_Setting_Menu_001_png, res.Button_Setting_Menu_001_On_png, function() {
+            this.refresh_items(CONFIG.SHOP_PLODUCT_LIST_FOOD , calledLayer);
         }, this);
         menu001Button.setAnchorPoint(0, 0);
-        menu001Button.setPosition(10, 550);
+        menu001Button.setPosition(10, 550 + 50);
 
-        var menu002Button = new cc.MenuItemImage(res.Button_Setting_Menu_002_png, res.Button_Setting_Menu_002_png, function() {
-            this.refresh_items(this.pos_h, calledLayer);
+        var menu002Button = new cc.MenuItemImage(res.Button_Setting_Menu_002_png, res.Button_Setting_Menu_002_On_png, function() {
+            this.refresh_items(CONFIG.SHOP_PLODUCT_LIST_HOUSE, calledLayer);
         }, this);
         menu002Button.setAnchorPoint(0, 0);
-        menu002Button.setPosition(187, 550);
+        menu002Button.setPosition(187, 550 + 50);
 
-        var menu003Button = new cc.MenuItemImage(res.Button_Setting_Menu_003_png, res.Button_Setting_Menu_003_png, function() {
-            this.refresh_items(this.pos_s, calledLayer);
+        var menu003Button = new cc.MenuItemImage(res.Button_Setting_Menu_003_png, res.Button_Setting_Menu_003_On_png, function() {
+            this.refresh_items(CONFIG.SHOP_PLODUCT_LIST_SAFE, calledLayer);
         }, this);
         menu003Button.setAnchorPoint(0, 0);
-        menu003Button.setPosition(364, 550);
+        menu003Button.setPosition(364, 550 + 50);
 
         this.menuButton = new cc.Menu(
             menu001Button, menu002Button, menu003Button
@@ -50,8 +44,7 @@ var Shop = cc.Node.extend({
         this.menuButton.setPosition(0, 0);
         this.settingWindow.addChild(this.menuButton, 99999);
 
-        this.refresh_items(this.pos_f, calledLayer);
-
+        this.refresh_items(CONFIG.SHOP_PLODUCT_LIST_FOOD , calledLayer);
 
         this.selectedTarget = cc.Sprite.create(res.Item_Select_png);
         this.settingWindow.addChild(this.selectedTarget, 999999999999);
@@ -64,14 +57,22 @@ var Shop = cc.Node.extend({
         this.noLevelTarget = cc.Sprite.create(res.Item_No_Money_png);
         this.settingWindow.addChild(this.noLevelTarget, 999999999999);
         this.noLevelTarget.setPosition(-500, -500);
+
+        this.infoLabel = cc.LabelTTF.create("", "Arial", 25);
+        this.infoLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
+        this.infoLabel.setAnchorPoint(0,1);
+        this.infoLabel.textAlign = cc.TEXT_ALIGNMENT_LEFT;
+        this.settingWindow.addChild(this.infoLabel);
+        this.infoLabel.setPosition(50, 40);
     },
 
     setLabels: function(game, itemData) {
-        game.buildingInfo.positionNameLabel.setString(itemData["name"]);
-        game.buildingInfo.positionAmountLabel.setString(itemData["amount"]);
-        game.buildingInfo.positionDetailLabel.setString(
+        game.infoBuilding.positionNameLabel.setString(itemData["name"]);
+        game.infoBuilding.positionAmountLabel.setString(itemData["amount"]);
+        game.infoBuilding.positionDetailLabel.setString(
             itemData["description"]
         );
+        this.infoLabel.setString(itemData["name"] + "  |  " + itemData["description"] + "  | 費用:" + itemData["amount"]);
     },
 
     setSlectedItemByAmount: function(game, itemData, itemSprite) {
@@ -97,20 +98,19 @@ var Shop = cc.Node.extend({
 
         this.selectedTarget.setPosition(
             itemSprite.getPosition().x + 110,
-            itemSprite.getPosition().y + 110
+            itemSprite.getPosition().y + 110 + 50
         );
         this.noMoneyTarget.setPosition(
             itemSprite.getPosition().x + 110,
-            itemSprite.getPosition().y + 110
+            itemSprite.getPosition().y + 110 + 50
         );
         this.noLevelTarget.setPosition(
             itemSprite.getPosition().x + 110,
-            itemSprite.getPosition().y + 110
+            itemSprite.getPosition().y + 110 + 50
         );
     },
 
     refresh_items: function(itemPrams, calledLayer) {
-        //cc.log(this.items.length);
         if (this.settingWindow.length > 1) {
             for (var j = 0; j < 9; j++) {
                 this.settingWindow.removeChild(this.items[j]);
@@ -245,11 +245,9 @@ var Shop = cc.Node.extend({
 
         var menu = new cc.Menu(item001, item002, item003, item004, item005, item006, item007, item008, item009);
         menu.setAnchorPoint(0, 0);
-        menu.setPosition(110, 110);
+        menu.setPosition(110, 110 + 50);
         this.settingWindow.addChild(menu, 1);
     },
 
-    update: function() {
-
-    },
+    update: function() {},
 });

@@ -16,7 +16,7 @@ var Setting = cc.Node.extend({
         this.settingLayer.setPosition(-320, -1136 / 2);
         this.addChild(this.settingLayer);
 
-        this.settingWindow = cc.Sprite.create(res.Setting_Menu_png);
+        this.settingWindow = cc.Sprite.create(res.Window_Setting_Menu_png);
         this.addChild(this.settingWindow);
 
         //<-----------------リセット用の画面ここから

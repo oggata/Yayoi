@@ -17,7 +17,7 @@ var LevelManage = cc.Node.extend(
         this.settingLayer = cc.LayerColor.create(new cc.Color(0, 0, 0, 255 * 0.8), 640, 1136);
         this.addChild(this.settingLayer);
 
-        this.settingWindow = cc.Sprite.create(res.Setting_Window_png);
+        this.settingWindow = cc.Sprite.create(res.Window_Setting_png);
         this.settingWindow.setPosition(320,1136/2);
         this.addChild(this.settingWindow);
     },

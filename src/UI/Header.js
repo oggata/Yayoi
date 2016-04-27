@@ -26,37 +26,22 @@ var Header = cc.Node.extend(
 
         this.populationLabel = cc.LabelTTF.create("", "Arial", 18);
         this.populationLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
-        //this.populationLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
         this.populationLabel.setAnchorPoint(1,0);
         this.header.addChild(this.populationLabel);
         this.populationLabel.setPosition(170, 57);
 
         this.amountLabel = cc.LabelTTF.create("", "Arial", 18);
         this.amountLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
-        //this.amountLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
         this.amountLabel.setAnchorPoint(1,0);
         this.header.addChild(this.amountLabel);
         this.amountLabel.setPosition(170, 28);
-
-        this.dokiLabel = cc.LabelTTF.create("", "Arial", 18);
-        //this.dokiLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
-        //this.dokiLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
-        //this.dokiLabel.setAnchorPoint(1,0);
-        //this.header.addChild(this.dokiLabel);
-        //this.dokiLabel.setPosition(170, -200);
 
         this.cycleLabel = cc.LabelTTF.create("50", "Arial", 18);
         this.cycleLabel.setFontFillColor(new cc.Color(255, 255, 255, 255));
         this.cycleLabel.enableStroke(new cc.Color(0, 0, 0, 255), 1, false);
         this.header.addChild(this.cycleLabel,99999);
         this.cycleLabel.setPosition(320, 160);
-/*
-        this.happyRateLabel = cc.LabelTTF.create("50", "Arial", 28);
-        this.happyRateLabel.setFontFillColor(new cc.Color(0, 0, 0, 255));
-        this.happyRateLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
-        this.header.addChild(this.happyRateLabel);
-        this.happyRateLabel.setPosition(600, 120);
-*/
+
         //ゲージ
         this.foodGauge = new Gauge(150, 18, 'food');
         this.foodGauge.setAnchorPoint(0, 0);
@@ -98,8 +83,5 @@ var Header = cc.Node.extend(
         this.addChild(this.header2,99999);
     },
 
-    update : function () 
-    {
-
-    }, 
+    update : function () {}, 
 });
