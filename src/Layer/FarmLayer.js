@@ -5,9 +5,6 @@
 //  Created by Fumitoshi Ogata on 01/02/16.
 //  Copyright (c) 2016 http://oggata.github.io All rights reserved.
 //
-/*
-        瑞穂の国の伝説」 卑弥呼
-*/
 
 var FarmLayer = cc.Layer.extend({
     ctor: function(storage) {
@@ -68,30 +65,29 @@ var FarmLayer = cc.Layer.extend({
 
         this.mapChips = [];
         this.items = [];
+        this.enemies = [];
         this.humans = [];
+        this.effects = [];
+        this.warriorCount = 0;
 
-        //header
         this.header = new Header(this);
         this.header.setPosition(320, this.viewSize.height - 80);
         this.header.setAnchorPoint(0.5, 0);
         this.addChild(this.header, 9999999);
 
         this.mapManager = new MapManager(this);
-        //this.isReadyToRenderMap = true;
         this.mapManager.renderWorld();
 
         //経過時間の少数だけを取る
         var _pastTimeRate = this.mapManager.pastCycle - Math.floor(this.mapManager.pastCycle);
-
         if (this.mapManager.pastCycle >= 1) {
             this.mapManager.calcPastTime1(this.mapManager.pastCycle, "background");
         } else {
             this.mapManager.calcPastTime2();
         }
 
-        this.cycleTimeRate = _pastTimeRate; //30 * CONFIG.CYCLE_SECOND
+        this.cycleTimeRate = _pastTimeRate;
         this.cycleTime = 30 * CONFIG.CYCLE_SECOND * _pastTimeRate;
-
         this.mapManager.setPositionByMapChip(421);
 
         //GetTouchEvent
@@ -110,48 +106,74 @@ var FarmLayer = cc.Layer.extend({
             }
         }), this);
 
-        //カットインを作成
-        this.cutIn = new CutIn(this);
-        this.addChild(this.cutIn);
+        this.lastTouchGameLayerX = this.baseNode.getPosition().x;
+        this.lastTouchGameLayerY = this.baseNode.getPosition().y;
 
-        this.shop = new Shop(this);
-        this.addChild(this.shop);
-        this.shop.setVisible(false);
-        this.shop.setPosition(320, this.viewSize.height / 2);
+        this.setInitializeUI();
+        this.updateCnt = 999;
+        this.secondCnt = 0;
 
-        this.setting = new Setting(this);
-        this.addChild(this.setting);
-        this.setting.setVisible(false);
-        this.setting.setPosition(320, this.viewSize.height / 2);
+        this.mapManager.enemyPositions = this.storage.enemyPositions;
+        if(this.mapManager.enemyPositions.length >= 1){
+            this.mapManager.intializeEnemy();
+        }else if (this.storage.tutorialNum >= 7) {
+            this.mapManager.renderItems(0, 0, 0, 1);
+        }
+//this.mapManager.renderItems(0, 0, 0, 9);
 
-        this.tutorial = new Tutorial();
-        this.addChild(this.tutorial);
-        this.tutorial.setVisible(false);
-        this.tutorial.setPosition(320, this.viewSize.height / 2);
+        this.reward = new Reward(this);
+        this.addChild(this.reward);
+
+        this.setRewardId(1);
+
+        this.scheduleUpdate();
+        return true;
+    },
+
+    isSetRewardId: function(reward_id) {
+        for (var i = 0; i < this.storage.rewardData.length; i++)
+        {
+            if(this.storage.rewardData[i] == reward_id)
+            {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    setRewardId: function(reward_id) {
+        for (var i = 0; i < this.storage.rewardData.length; i++)
+        {
+            if(this.storage.rewardData[i] == reward_id)
+            {
+                return false;
+            }
+        }
+        this.storage.rewardData.push(reward_id);
+        return true;
+    },
+
+    setInitializeUI: function() {
+        this.ActionWindow = new Action(this);
+        this.addChild(this.ActionWindow);
+        this.ActionWindow.setPosition(100, 200);
+        this.ActionWindow.setVisible(false);
 
         this.lvManage = new LevelManage();
         this.addChild(this.lvManage);
         this.lvManage.setVisible(false);
 
-        this.footer = new Footer(this);
-        this.addChild(this.footer);
-
-        this.lastTouchGameLayerX = this.baseNode.getPosition().x;
-        this.lastTouchGameLayerY = this.baseNode.getPosition().y;
-
         this.resetWindow = new RemoveBuilding(this);
         this.addChild(this.resetWindow);
-        this.resetWindow.setPosition(320, 250);
+        this.resetWindow.setPosition(320, 150);
 
         this.setBuilding = new SetBuilding(this);
         this.addChild(this.setBuilding);
-        this.setBuilding.setPosition(320, 250);
+        this.setBuilding.setPosition(320, 150);
 
-        this.buildingInfo = new InfoBuilding();
-        this.addChild(this.buildingInfo);
-        this.buildingInfo.setVisible(false);
-
-        this.mapManager.renderItems(1, 0, 0, 1);
+        this.infoBuilding = new InfoBuilding();
+        this.addChild(this.infoBuilding);
+        this.infoBuilding.setVisible(false);
 
         this.targetItem = cc.Sprite.create(res.Map_Target_Ok_png);
         this.targetItem.retain();
@@ -168,31 +190,100 @@ var FarmLayer = cc.Layer.extend({
         this.targetNgSprite.setAnchorPoint(0.5, 0);
         this.baseNode.addChild(this.targetNgSprite, 9999999);
 
-        this.mapInfoSprite = cc.Sprite.create(res.Info_png);
-        this.baseNode.addChild(this.mapInfoSprite, 9999999);
-        this.mapInfoSprite.setOpacity(255 * 0.5);
-
-        this.mapInfo = cc.LabelTTF.create("", "Arial", 24);
-        this.mapInfo.setFontFillColor(new cc.Color(0, 0, 0, 255));
-        this.mapInfo.setPosition(241 / 2, 50);
-        this.mapInfo.setAnchorPoint(0.5, 0);
-        this.mapInfoSprite.addChild(this.mapInfo);
-
         this.introduction = new Introduction(this);
         this.addChild(this.introduction);
         this.introduction.setVisible(false);
 
-        this.scheduleUpdate();
-        return true;
+        this.tutorial = new Tutorial();
+        this.addChild(this.tutorial);
+        this.tutorial.setVisible(false);
+        this.tutorial.setPosition(320, this.viewSize.height / 2);
+
+        this.cutIn = new CutIn(this);
+        this.addChild(this.cutIn);
+
+        this.shop = new Shop(this);
+        this.addChild(this.shop);
+        this.shop.setVisible(false);
+        this.shop.setPosition(320, this.viewSize.height / 2);
+
+        this.setting = new Setting(this);
+        this.addChild(this.setting);
+        this.setting.setVisible(false);
+        this.setting.setPosition(320, this.viewSize.height / 2);
+
+        this.footer = new Footer(this);
+        this.addChild(this.footer);
     },
 
     getItemFromLibrary: function(itemId) {
-        for (var i = 0; i < this.storage.itemLibraries.length; i++) {
-            if (this.storage.itemLibraries[i]["id"] == itemId) {
-                return this.storage.itemLibraries[i];
+        for (var i = 0; i < CONFIG.SHOP_PRODUCT_ITEM_MASTER.length; i++) {
+            if (CONFIG.SHOP_PRODUCT_ITEM_MASTER[i]["id"] == itemId) {
+                return CONFIG.SHOP_PRODUCT_ITEM_MASTER[i];
             }
         }
-        return this.storage.itemLibraries[1];
+        return CONFIG.SHOP_PRODUCT_ITEM_MASTER[1];
+    },
+
+    moveTouchedMarker: function(touchX, touchY) {
+        for (var i = 0; i < this.mapChips.length; i++) {
+            if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
+                var _x = this.mapChips[i].getPosition().x;
+                var _y = this.mapChips[i].getPosition().y;
+
+                this.targetOkSprite.setPosition(_x, _y);
+                this.targetNgSprite.setPosition(_x, _y);
+                this.targetItem.setPosition(_x, _y);
+            }
+        }
+    },
+
+    getTouchedEnemy: function(touchX, touchY) {
+        for (var i = 0; i < this.enemies.length; i++) {
+            if ((this.enemies[i].getPosition().x - 216 / 2) * this.windowScale < touchX && touchX < (this.enemies[i].getPosition().x + 216 / 2) * this.windowScale && (this.enemies[i].getPosition().y - 108 / 2) * this.windowScale < touchY && touchY < (this.enemies[i].getPosition().y + 200 / 2) * this.windowScale) {
+                return this.enemies[i];
+            }
+        }
+        return null;
+    },
+
+    getTouchedBuilding: function(touchX, touchY) {
+        for (var i = 0; i < this.mapChips.length; i++) {
+            if (!this.mapChips[i]) return;
+            if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
+                var _chkMapId = this.mapChips[i].mapId;
+                if (this.mapChips[i].itemData) {
+                    return this.mapChips[i].itemData;
+                }
+            }
+        }
+        return null;
+    },
+
+    getTouchedMapChip: function(touchX, touchY) {
+        for (var i = 0; i < this.mapChips.length; i++) {
+            if (!this.mapChips[i]) return;
+            if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
+                var _chkMapId = this.mapChips[i].mapId;
+                if (this.mapChips[i]) {
+                    return this.mapChips[i];
+                }
+            }
+        }
+        return null;
+    },
+
+    setBuildingToTouchedPosition: function(mapChip) {
+        //<--------1個前のmapIDと押下したmapIDが同じだったら設置する-------->
+        if (this.pushedMapId == mapChip.mapId) {
+            this.setBuilding.mapChip = mapChip;
+            this.setBuilding.itemData = this.hasItemData;
+            this.setBuilding.setVisible(true);
+            this.shop.selectedItemId = null;
+        }
+        //記録
+        this.pushedMapId = mapChip.mapId;
+        return;
     },
 
     touchStart: function(location) {
@@ -202,8 +293,10 @@ var FarmLayer = cc.Layer.extend({
             this.shop.isVisible() == true ||
             this.setting.isVisible() == true ||
             this.tutorial.isVisible() == true ||
-            this.introduction.isVisible() == true
+            this.introduction.isVisible() == true || 
+            this.reward.isVisible() == true
         ) return;
+
         playSE_Button(this.storage);
 
         this.firstTouchX = location.x;
@@ -211,83 +304,58 @@ var FarmLayer = cc.Layer.extend({
         var touchX = location.x - this.lastTouchGameLayerX;
         var touchY = location.y - this.lastTouchGameLayerY;
 
-        //ターゲットとhitした場合は、actionCodeを実行する
-        //actionCode = 1:設置準備  2:設置
-        if ((this.targetOkSprite.getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.targetOkSprite.getPosition().x + 216 / 3) * this.windowScale && (this.targetOkSprite.getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.targetOkSprite.getPosition().y + 200 / 3) * this.windowScale) {}
-        for (var i = 0; i < this.mapChips.length; i++) {
-            if (!this.mapChips[i]) return;
+        this.ActionWindow.setVisible(false);
+        this.moveTouchedMarker(touchX, touchY);
+        this.ActionWindow.targetMapChip = null;
+        this.ActionWindow.targetEnemy = null;
+        this.ActionWindow.targetBuilding = null;
+        var mapChip = this.getTouchedMapChip(touchX, touchY);
+        if (mapChip != null) {
+            this.ActionWindow.type = "destroy";
+            this.ActionWindow.targetMapChip = mapChip;
+        }
 
-            if ((this.mapChips[i].getPosition().x - 216 / 3) * this.windowScale < touchX && touchX < (this.mapChips[i].getPosition().x + 216 / 3) * this.windowScale && (this.mapChips[i].getPosition().y - 108 / 3) * this.windowScale < touchY && touchY < (this.mapChips[i].getPosition().y + 200 / 3) * this.windowScale) {
-                var _x = this.mapChips[i].getPosition().x;
-                var _y = this.mapChips[i].getPosition().y;
+        var enemy = this.getTouchedEnemy(touchX, touchY);
+        if (enemy != null) {
+            this.ActionWindow.targetEnemy = enemy;
+            this.ActionWindow.setVisible(true);
+            this.ActionWindow.type = "attack";
+            this.infoBuilding.setInfo(enemy.name, enemy.description);
+            return;
+        }
 
-                //ターゲットを移動させる
-                this.targetOkSprite.setPosition(_x, _y);
-                this.targetNgSprite.setPosition(_x, _y);
-                this.targetItem.setPosition(_x, _y);
-                this.mapInfoSprite.setPosition(_x, _y + 200);
+        var building = this.getTouchedBuilding(touchX, touchY);
+        if (building != null) {
+            this.ActionWindow.setVisible(true);
+            this.ActionWindow.targetBuilding = building;
 
-                if (this.mapChips[i].itemData != null) {
-                    var _txt = this.mapChips[i].itemData["name"];
-                    _txt += "\n" + this.mapChips[i].itemData["description"];
-                    _txt += "\nコスト：" + this.mapChips[i].itemData["cost"];
-                    this.mapInfo.setString(_txt);
-                    this.mapInfoSprite.setVisible(true);
-                } else {
-                    this.mapInfo.setString("");
-                    this.mapInfoSprite.setVisible(false);
-                }
+            this.infoBuilding.setInfo(building.name, building.description);
 
-                if (this.mapManager.conf[this.mapChips[i].confNumber] == 3) {
-                    if (this.hasItemData != null) {
-                        this.targetOkSprite.setVisible(true);
-                        this.targetNgSprite.setVisible(false);
-                        this.targetItem.setOpacity(0.5 * 255);
-                        //<--------1個前のmapIDと押下したmapIDが同じだったら設置する-------->
-                        if (this.pushedMapId == this.mapChips[i].mapId) {
-                            this.mapManager.setPositionByMapChip(
-                                this.mapChips[i].mapId
-                            );
-                            this.setBuilding.mapChip = this.mapChips[i];
-                            this.setBuilding.itemData = this.hasItemData;
-                            this.setBuilding.setVisible(true);
-                            this.shop.selectedItemId = null;
-                        }
-                        //記録
-                        this.pushedMapId = this.mapChips[i].mapId;
-                        return;
-                    } else {
-                        this.targetOkSprite.setVisible(true);
-                        this.targetNgSprite.setVisible(false);
-                        this.targetItem.setOpacity(0 * 255);
-                        this.pushedMapId = this.mapChips[i].mapId;
-                        return;
-                    }
-                } else {
-                    //<--------設置可能場所以外は警告を表示する-------->
-                    if (this.hasItemData != null) {
-                        this.targetOkSprite.setVisible(false);
-                        this.targetNgSprite.setVisible(true);
-                        this.targetItem.setOpacity(0.5 * 255);
-                        this.pushedMapId = this.mapChips[i].mapId;
-                        this.mapManager.setPositionByMapChip(
-                            this.mapChips[i].mapId
-                        );
-                        return;
-                    } else {
-                        //itemを保持していない状態で、2回同じ場所を押したらリセットメニューを開く
-                        if (this.pushedMapId == this.mapChips[i].mapId) {
-                            this.resetWindow.mapChipId = this.mapChips[i].confNumber;
-                            this.resetWindow.setVisible(true);
-                        }
-                        this.targetOkSprite.setVisible(false);
-                        this.targetNgSprite.setVisible(true);
-                        this.targetItem.setOpacity(0);
-                        this.pushedMapId = this.mapChips[i].mapId;
-                        return;
+            if (building["house"] > 0) {
+                this.ActionWindow.type = "add_population";
+            } else {
+                this.ActionWindow.type = "destroy";
+            }
+        }
+
+        if (this.hasItemData != null) {
+            //設置可能な場所かどうか確認する
+            var mapChip = this.getTouchedMapChip(touchX, touchY);
+            if (mapChip != null) {
+                if (mapChip.confNum) {
+                    if (mapChip.confNum == 3) {
+                        this.setBuildingToTouchedPosition(mapChip);
                     }
                 }
             }
+            this.ActionWindow.setVisible(false);
+            this.infoBuilding.setVisible(false);
+        }
+
+        if (this.hasItemData != null || this.shop.selectedItemId != null || building != null || enemy != null) {
+            this.infoBuilding.setVisible(true);
+        } else {
+            this.infoBuilding.setVisible(false);
         }
     },
 
@@ -298,7 +366,8 @@ var FarmLayer = cc.Layer.extend({
             this.shop.isVisible() == true ||
             this.setting.isVisible() == true ||
             this.tutorial.isVisible() == true ||
-            this.introduction.isVisible() == true
+            this.introduction.isVisible() == true || 
+            this.reward.isVisible() == true
         ) return;
 
         var scrollX = this.firstTouchX - location.x;
@@ -306,6 +375,8 @@ var FarmLayer = cc.Layer.extend({
         var x = this.lastTouchGameLayerX - scrollX;
         var y = this.lastTouchGameLayerY - scrollY;
         this.baseNode.setPosition(x, y);
+        this.ActionWindow.setVisible(false);
+        this.infoBuilding.setVisible(false);
     },
 
     touchFinish: function(location) {
@@ -315,22 +386,15 @@ var FarmLayer = cc.Layer.extend({
             this.shop.isVisible() == true ||
             this.setting.isVisible() == true ||
             this.tutorial.isVisible() == true ||
-            this.introduction.isVisible() == true
+            this.introduction.isVisible() == true || 
+            this.reward.isVisible() == true
         ) return;
 
         this.lastTouchGameLayerX = this.baseNode.getPosition().x;
         this.lastTouchGameLayerY = this.baseNode.getPosition().y;
     },
 
-    update: function(dt) {
-
-        if (this.isReadyToRenderMap == true) {
-            this.isReadyToRenderMap = false;
-            this.mapManager.renderWorld();
-        }
-
-        this.introduction.update();
-        if (this.introduction.isVisible()) return;
+    uiUpdate: function() {
 
         this.mapManager.update();
 
@@ -340,79 +404,124 @@ var FarmLayer = cc.Layer.extend({
 
         this.resetWindow.update();
 
-        if (this.hasItemData != null || this.shop.selectedItemId != null) {
-            this.buildingInfo.setVisible(true);
-        } else {
-            this.buildingInfo.setVisible(false);
+        this.footer.update();
+
+        this.ActionWindow.update();
+    },
+
+    update: function(dt) {
+CONFIG.CYCLE_SECOND = 10 * 1 * 1;
+this.mapManager.amount = 300;
+this.mapManager.food = 15;
+this.storage.tutorialNum = 10;
+        if (this.isReadyToRenderMap == true) {
+            this.isReadyToRenderMap = false;
+            this.mapManager.renderWorld();
         }
 
+        this.introduction.update();
+        this.cutIn.update();
+        if (this.introduction.isVisible()) return;
+        if (this.cutIn.isVisible()) return;
+
+        this.uiUpdate();
         this.cycleTime += 1;
         this.cycleTimeByTerm += 1;
 
         this.cycleTimeRate = (this.cycleTime / (30 * CONFIG.CYCLE_SECOND));
-        //サイクルを30で割った数だけ、影響を与える
-        if (this.cycleTimeByTerm >= 30 * (CONFIG.CYCLE_SECOND / 10)) {
+        //サイクルを5で割った数だけ、影響を与える
+        if (this.cycleTimeByTerm >= 30 * (CONFIG.CYCLE_SECOND / 5)) {
             this.cycleTimeByTerm = 0;
-            var _spendCosts = this.mapManager.getSpendCosts();
-            this.mapManager.food -= floatFormat(_spendCosts["food"] / 30, 2);
-            this.mapManager.renderGauge();
-
-            //foodが0以下だったら誰か死ぬ
-            if (this.mapManager.food <= 0 && this.population >= 5) {
-                var _rand = getRandNumberFromRange(1, this.humans.length);
-                this.humans[_rand].deadCnt = 1;
-                this.mapManager.setPositionByMapChip(this.humans[_rand].targetMarker.mapId);
+            if (this.mapManager.waitPopulation >= 1) {
+                this.mapManager.waitPopulation -= 1;
+                this.mapManager.population += 1;
+                this.mapManager.increasePopulationCount += 1;
+                var _housePosArray = this.mapManager.housePositions;
+                var shuffle = function() {
+                    return Math.random() - .5
+                };
+                _housePosArray.sort(shuffle)
+                this.addEffectByMapChip(_housePosArray[0].mapId, "hart");
+                playSE004_Button(this.storage);
             }
+            this.mapManager.safe += 0.5;
+            this.mapManager.saveData();
         }
 
         //サイクル毎(1月)に結果を算出する
         if (this.cycleTime >= 30 * CONFIG.CYCLE_SECOND) {
             this.cycleTime = 0;
-            this.mapManager.foodDonePositions = [];
-            //this.mapManager.renderWorld();
             this.isReadyToRenderMap = true;
             this.mapManager.calcPastTime1(1, "gaming");
         }
 
         var _visiblePopulation = this.mapManager.population / 3;
-        if (_visiblePopulation <= CONFIG.VISIBLE_MIN_PEOPLE_CNT) {
+        if (this.mapManager.population <= 3) {
+            _visiblePopulation = this.mapManager.population
+        } else if (_visiblePopulation <= CONFIG.VISIBLE_MIN_PEOPLE_CNT) {
             _visiblePopulation = CONFIG.VISIBLE_MIN_PEOPLE_CNT;
-        }
-        if (_visiblePopulation >= CONFIG.VISIBLE_MAX_PEOPLE_CNT) {
+        } else if (_visiblePopulation >= CONFIG.VISIBLE_MAX_PEOPLE_CNT) {
             _visiblePopulation = CONFIG.VISIBLE_MAX_PEOPLE_CNT;
         }
 
-        if (this.humans.length < _visiblePopulation) {
-            if (this.mapManager.housePositions.length == 0) return;
-            var _rand = getRandNumberFromRange(0, this.mapManager.housePositions.length);
-            var _housePosition = this.mapManager.housePositions[_rand].mapId;
-            this.addHumanByMapChip(_housePosition);
+        //1秒に1回実施
+        this.secondCnt++;
+        if (this.secondCnt >= 30 * 2) {
+            this.secondCnt = 0;
+            if (this.humans.length < _visiblePopulation) {
+                if (this.mapManager.housePositions.length == 0) return;
+                var _rand = getRandNumberFromRange(0, this.mapManager.housePositions.length);
+                var _housePosition = this.mapManager.housePositions[_rand].mapId;
+                this.addHumanByMapChip(_housePosition);
+            }
         }
 
         for (var i = 0; i < this.humans.length; i++) {
             if (this.humans[i].update() == false) {
                 if (this.humans[i].isDead() == true) {
                     this.mapManager.population -= 1;
-                    this.mapManager.renderGauge();
                 }
                 this.baseNode.removeChild(this.humans[i]);
                 this.humans.splice(i, 1);
+            } else {
+                this.baseNode.reorderChild(
+                    this.humans[i],
+                    Math.floor(999999 - this.humans[i].getPosition().y + 108)
+                );
             }
         }
 
-        for (var i = 0; i < this.humans.length; i++) {
-            this.baseNode.reorderChild(
-                this.humans[i],
-                Math.floor(999999 - this.humans[i].getPosition().y + 108)
-            );
+        for (var i = 0; i < this.effects.length; i++) {
+            if (this.effects[i].update() == false) {
+                this.baseNode.removeChild(this.effects[i]);
+                this.effects.splice(i, 1);
+            } else {
+                this.baseNode.reorderChild(
+                    this.effects[i],
+                    Math.floor(999999 - this.effects[i].getPosition().y + 108)
+                );
+            }
         }
 
-        for (var i = 0; i < this.mapChips.length; i++) {
-            if (this.mapChips[i]) {
-                this.mapChips[i].update();
+        for (var i = 0; i < this.enemies.length; i++) {
+            if (this.enemies[i].update() == false) {
+                this.mapManager.killedEnemyCount += 1;
+                this.storage.killedEnemyCount += 1;
+                if(this.enemies[i].giveRewordFlag == 1)
+                {
+                    this.mapManager.amount += this.enemies[i].reward;
+                    this.addEffectByPosition(
+                        this.enemies[i].getPosition().x,
+                        this.enemies[i].getPosition().y,
+                        "money"
+                    );
+                }
+                this.baseNode.removeChild(this.enemies[i]);
+                this.enemies.splice(i, 1);
+            } else {
                 this.baseNode.reorderChild(
-                    this.mapChips[i],
-                    Math.floor(999999 - this.mapChips[i].getPosition().y)
+                    this.enemies[i],
+                    Math.floor(999999 - this.enemies[i].getPosition().y + 108)
                 );
             }
         }
@@ -424,57 +533,105 @@ var FarmLayer = cc.Layer.extend({
             );
         }
 
+        //人 x 敵
+        this.warriorCount = 0;
         for (var m = 0; m < this.humans.length; m++) {
-            for (var n = 0; n < this.humans.length; n++) {
-                if (this.humans[m] != this.humans[n]) {
-                    var dX = this.humans[m].getPosition().x - this.humans[n].getPosition().x;
-                    var dY = this.humans[m].getPosition().y - this.humans[n].getPosition().y;
-                    var dist = Math.sqrt(dX * dX + dY * dY);
-                    if (dist <= 3) {
-                        this.humans[m].setPosition(this.humans[m].getPosition().x + dX / 5, this.humans[m].getPosition().y + dY / 5);
-                        this.humans[n].setPosition(this.humans[n].getPosition().x - dX / 5, this.humans[n].getPosition().y - dY / 5);
+            if (this.humans[m].type == 2) {
+                this.warriorCount += 1;
+            }
+            for (var n = 0; n < this.enemies.length; n++) {
+                var dX = this.humans[m].getPosition().x - this.enemies[n].getPosition().x;
+                var dY = this.humans[m].getPosition().y - this.enemies[n].getPosition().y;
+                var dist = Math.sqrt(dX * dX + dY * dY);
+                if (dist <= 50) {
+                    this.humans[m].stopCount = 1;
+                    if (this.humans[m].type == 1) {
+                        this.humans[m].setEmotion("got_ill");
+                        if (this.humans[m].deadCnt == 0) {
+                            this.humans[m].deadCnt = 1;
+
+                            if(this.enemies[n])
+                            {
+                                this.enemies[n].killedPeopleCount+=1;
+                            }
+
+                            if(this.humans[m].targetMarker != null){
+                                this.mapManager.setPositionByMapChip(this.humans[m].targetMarker.mapId);
+                            }
+                            this.mapManager.killedPopulationCount += 1;
+                        }
+                    } else {
+                        this.humans[m].stopCount = 1;
+                        this.enemies[n].hp -= 1;
                     }
                 }
             }
         }
 
-        for (var m = 0; m < this.humans.length; m++) {
-            for (var n = 0; n < this.items.length; n++) {
-                if (this.humans[m] != this.items[n]) {
-                    if (this.humans[m]) {
-                        var dX = this.humans[m].getPosition().x - this.items[n].getPosition().x;
-                        var dY = this.humans[m].getPosition().y - this.items[n].getPosition().y;
+        this.updateCnt++;
+        this.maxUpdateCnt = 30;
+        if (this.updateCnt >= this.maxUpdateCnt) {
+            this.updateCnt = 0;
+
+            //人 x 人
+            for (var m = 0; m < this.humans.length; m++) {
+                for (var n = 0; n < this.humans.length; n++) {
+                    if (this.humans[m] != this.humans[n]) {
+                        var dX = this.humans[m].getPosition().x - this.humans[n].getPosition().x;
+                        var dY = this.humans[m].getPosition().y - this.humans[n].getPosition().y;
                         var dist = Math.sqrt(dX * dX + dY * dY);
-                        if (dist <= 50) {
-                            var _itemId = this.items[n].itemId;
-                            if (_itemId == "money") {
-                                //お金
-                                this.mapManager.amount += CONFIG.ITEM_MONEY_AMOUNT;
-                                this.humans[m].setEmotion("got_money");
-                                this.baseNode.removeChild(this.items[n]);
-                                this.items.splice(n, 1);
-                            } else if (_itemId == "food") {
-                                //食べ物
-                                this.mapManager.food += CONFIG.ITEM_FOOD_AMOUNT;
-                                this.humans[m].setEmotion("got_food2");
-                                this.baseNode.removeChild(this.items[n]);
-                                this.items.splice(n, 1);
-                            } else if (_itemId == "doki") {
-                                //土器
-                                this.mapManager.doki += CONFIG.ITEM_DOKI_AMOUNT;
-                                this.humans[m].setEmotion("got_doki");
-                                this.baseNode.removeChild(this.items[n]);
-                                this.items.splice(n, 1);
-                            } else if (_itemId == "ill") {
-                                //病気
-                                this.humans[m].setEmotion("got_ill");
-                                this.baseNode.removeChild(this.items[n]);
-                                this.items.splice(n, 1);
-                                //一定の確率で死ぬ
-                                var _rand = getRandNumberFromRange(1, 100);
-                                if (1 <= _rand && _rand <= this.mapManager.safeRate * 100) {} else {
-                                    this.humans[m].deadCnt = 1;
-                                    this.mapManager.setPositionByMapChip(this.humans[m].targetMarker.mapId);
+                        if (dist <= 12) {
+                            this.humans[m].setPosition(this.humans[m].getPosition().x + dX / 5, this.humans[m].getPosition().y + dY / 5);
+                            this.humans[n].setPosition(this.humans[n].getPosition().x - dX / 5, this.humans[n].getPosition().y - dY / 5);
+                        }
+                    }
+                }
+            }
+
+            for (var i = 0; i < this.mapChips.length; i++) {
+                if (this.mapChips[i]) {
+                    this.mapChips[i].update();
+                    this.baseNode.reorderChild(
+                        this.mapChips[i],
+                        Math.floor(999999 - this.mapChips[i].getPosition().y)
+                    );
+                }
+            }
+
+            //敵のmapPositionを配列にいれておく
+            this.mapManager.enemyPositions = [];
+            for (var n = 0; n < this.enemies.length; n++) {
+                if(this.enemies[n].targetMarker != null){
+                    if(this.enemies[n].targetMarker.mapId != null){
+                        this.mapManager.enemyPositions.push(this.enemies[n].targetMarker.mapId);
+                    }
+                }
+            }
+
+            //いまisFoodAvailable=trueのものだけ配列にいれて管理する
+            this.mapManager.foodAvailableList = [];
+            for (var n = 0; n < this.mapChips.length; n++) {
+                if (this.mapChips[n].itemData) {
+                    if (this.mapChips[n].isFoodAvailable == true && this.mapChips[n].itemData["food"] > 0) {
+                        this.mapManager.foodAvailableList.push(this.mapChips[n]);
+                    }
+                }
+            }
+
+            for (var m = 0; m < this.humans.length; m++) {
+                for (var n = 0; n < this.mapManager.foodAvailableList.length; n++) {
+                    var dX = this.humans[m].getPosition().x - this.mapManager.foodAvailableList[n].getPosition().x;
+                    var dY = this.humans[m].getPosition().y - (this.mapManager.foodAvailableList[n].getPosition().y + 70);
+                    var dist = Math.sqrt(dX * dX + dY * dY);
+                    if (dist <= 30 && this.humans[m].type == 1) {
+                        if (this.mapManager.foodAvailableList[n].itemData) {
+                            if (this.mapManager.foodAvailableList[n].itemData["food"] > 0 && this.mapManager.foodAvailableList[n].isFoodAvailable == true) {
+                                this.humans[m].stopCount = 1;
+                                this.mapManager.foodAvailableList[n].foodCount += 1;
+                                if (this.mapManager.foodAvailableList[n].foodCount >= 100 / this.maxUpdateCnt) {
+                                    this.mapManager.food += this.mapManager.foodAvailableList[n].itemData["food"];
+                                    this.mapManager.foodAvailableList[n].isFoodAvailable = false;
+                                    this.mapManager.gotFoodCount += 1;
                                 }
                             }
                         }
@@ -483,7 +640,6 @@ var FarmLayer = cc.Layer.extend({
             }
         }
         this.mapManager.renderGauge();
-        this.cutIn.update();
     },
 
     addHumanByMapChip: function(mapId) {
@@ -491,11 +647,28 @@ var FarmLayer = cc.Layer.extend({
         var pos = this.mapChips[mapId - 1];
         var _x = pos["x"];
         var _y = pos["y"] + 108 / 2;
-        this.human = new Human(this);
+
+        this.human = new Human(this, 1);
         this.human.retain();
         this.baseNode.addChild(this.human, 999);
         this.human.setPosition(_x, _y);
         this.human.route = this.mapManager.getRouteIds(mapId, 3);
+        this.humans.push(this.human);
+    },
+
+    addWarriorByMapChip: function(mapId, distonationMapId, time) {
+        if (!this.mapChips[mapId - 1]) return;
+        var pos = this.mapChips[mapId - 1];
+        var _x = pos["x"];
+        var _y = pos["y"] + 108 / 2;
+        this.human = new Human(this, 2);
+        this.human.retain();
+        this.baseNode.addChild(this.human, 999);
+        this.human.setPosition(_x, _y);
+        this.human.route = this.mapManager.getRouteIdsFromTwoPosition(
+            mapId, distonationMapId, 5
+        );
+        this.human.startMaxTime = time;
         this.humans.push(this.human);
     },
 
@@ -506,6 +679,7 @@ var FarmLayer = cc.Layer.extend({
             var _x = pos["x"];
             var _y = pos["y"] + 108 / 2 + 25;
             this.item = new Item(this, itemId);
+            this.item.mapId = mapId;
             this.item.retain();
             this.baseNode.addChild(this.item, 99999999);
             this.item.setPosition(_x, _y);
@@ -514,8 +688,92 @@ var FarmLayer = cc.Layer.extend({
         }
     },
 
-    getFood: function() {
-        return this.mapManager.food;
+    addEnemyToMapId: function(enemyId,_departueMapId) {
+        var _rand = getRandNumberFromRange(0, this.mapManager.housePositions.length);
+        var _houseMapId = this.mapManager.housePositions[_rand].mapId;
+        var _route = this.mapManager.getRouteIdsFromTwoPosition2(_departueMapId, _houseMapId, 5);
+        var targetMapChip = this.getMapChipByMapId(_departueMapId);
+        if (targetMapChip) {
+            var _x = targetMapChip.getPosition().x;
+            var _y = targetMapChip.getPosition().y + 108 / 2;
+            this.enemy = new Enemy(this, enemyId);
+            this.enemy.targetMarker = targetMapChip;
+            this.enemy.route = _route;
+            this.enemy.retain();
+            this.baseNode.addChild(this.enemy, 99999999);
+            this.enemy.setPosition(_x, _y);
+            this.enemies.push(this.enemy);
+        }
+    },
+
+    addEnemyByMapChip: function(enemyId) {
+        var maxDistMapIds = [];
+        for (var i = 0; i < this.mapManager.roadPositions.length; i++) {
+            var _tmpDist = this.mapManager.getDistanceTowPositions(this.mapManager.roadPositions[i], 421);
+            if (_tmpDist > 4.5) {
+                maxDistMapIds.push(this.mapManager.roadPositions[i]);
+            }
+        }
+        shuffle(maxDistMapIds);
+        var maxDistMapId = maxDistMapIds[0];
+        var _departueMapId = maxDistMapId;
+        var _rand = getRandNumberFromRange(0, this.mapManager.housePositions.length);
+        var _houseMapId = this.mapManager.housePositions[_rand].mapId;
+        var _route = this.mapManager.getRouteIdsFromTwoPosition2(_departueMapId, _houseMapId, 5);
+        var pos = this.mapChips[_departueMapId - 1];
+        if (pos) {
+            var _x = pos["x"];
+            var _y = pos["y"] + 108 / 2;
+            this.enemy = new Enemy(this, enemyId);
+            this.enemy.targetMarker = pos;
+            this.enemy.route = _route;
+            this.enemy.retain();
+            this.baseNode.addChild(this.enemy, 99999999);
+            this.enemy.setPosition(_x, _y);
+            this.enemies.push(this.enemy);
+        }
+    },
+
+    addEffectByMapChip: function(mapId, effectId) {
+        if (!this.mapChips[mapId - 1]) return;
+        var pos = this.mapChips[mapId - 1];
+        if (pos) {
+            var _x = pos["x"];
+            var _y = pos["y"] + 108 / 2 + 25;
+            this.effect = new Effect(this, effectId);
+            this.effect.retain();
+            this.baseNode.addChild(this.effect, 99999999);
+            this.effect.setPosition(_x, _y);
+            this.effects.push(this.effect);
+        }
+    },
+
+    addEffectByPosition: function(posX, posY, effectId) {
+        var _x = posX;
+        var _y = posY;
+        this.effect = new Effect(this, effectId);
+        this.effect.retain();
+        this.baseNode.addChild(this.effect, 99999999);
+        this.effect.setPosition(_x, _y);
+        this.effects.push(this.effect);
+    },
+
+    getMapChipByMapId: function(mapId) {
+        for (var i = 0; i < this.mapChips.length; i++) {
+            if (this.mapChips[i].mapId == mapId) {
+                return this.mapChips[i];
+            }
+        }
+        return null;
+    },
+
+    isExistsItemKey: function(itemKey) {
+        for (var i = 0; i <= CONFIG.SHOP_PRODUCT_ITEM_MASTER.length; i++) {
+            if (CONFIG.SHOP_PRODUCT_ITEM_MASTER[i]["id"] == itemKey) {
+                return true;
+            }
+            return true;
+        }
     },
 
     //シーンの切り替え----->
@@ -533,6 +791,29 @@ FarmLayer.create = function(storage) {
 var getRandNumberFromRange = function(min, max) {
     var rand = min + Math.floor(Math.random() * (max - min));
     return rand;
+};
+
+var shuffle = function(array) {
+    var n = array.length,
+        t, i;
+
+    while (n) {
+        i = Math.floor(Math.random() * n--);
+        t = array[n];
+        array[n] = array[i];
+        array[i] = t;
+    }
+
+    return array;
+};
+
+String.prototype.format = function() {
+    var formatted = this;
+    for (var i = 0; i < arguments.length; i++) {
+        var regexp = new RegExp('\\{' + i + '\\}', 'gi');
+        formatted = formatted.replace(regexp, arguments[i]);
+    }
+    return formatted;
 };
 
 var floatFormat = function(number, n) {

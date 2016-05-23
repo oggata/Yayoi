@@ -58,8 +58,35 @@ cc.game.onStart = function(){
 
     this.viewSize = cc.director.getVisibleSize();
 
-    // Setup the resolution policy and design resolution size
-    cc.view.setDesignResolutionSize(this.viewSize.width, this.viewSize.height, cc.ResolutionPolicy.NO_BORDER);
+    var pf = cc.sys.platform;
+    cc.log("pfは...");
+    cc.log(pf);
+
+    if(cc.sys.isNative){
+        if(cc.sys.isMobile){
+            if(cc.sys.os == cc.sys.OS_ANDROID){
+                cc.view.setDesignResolutionSize(640, 1136, cc.ResolutionPolicy.SHOW_ALL);
+            }
+            if(cc.sys.os == cc.sys.OS_IOS){
+                if(cc.sys.platform == cc.sys.IPHONE){
+                    cc.log("iPhoneだよ");
+                    //cc.view.setDesignResolutionSize(this.viewSize.width, this.viewSize.height, cc.ResolutionPolicy.NO_BORDER);
+                    cc.view.setDesignResolutionSize(640, 1136, cc.ResolutionPolicy.SHOW_ALL);
+                }else if(cc.sys.platform == cc.sys.IPAD){
+                    cc.log("iPadだよ");
+                    cc.view.setDesignResolutionSize(640, 1136, cc.ResolutionPolicy.SHOW_ALL);
+                }else{
+                    cc.log("iPhoneでもiPadでもないよ");
+                    cc.view.setDesignResolutionSize(640, 1136, cc.ResolutionPolicy.SHOW_ALL);
+
+                }
+            }
+        }
+    }else{
+        cc.log("webだよ");
+        cc.view.setDesignResolutionSize(640, 1136, cc.ResolutionPolicy.SHOW_ALL);
+    }
+    //cc.view.setDesignResolutionSize(this.viewSize.width, this.viewSize.height, cc.ResolutionPolicy.NO_BORDER);
     //cc.view.setDesignResolutionSize(640, 1136, cc.ResolutionPolicy.SHOW_ALL);
     // The game will be resized when browser size change
     cc.view.resizeWithBrowserSize(true);

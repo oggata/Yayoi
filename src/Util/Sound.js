@@ -46,6 +46,30 @@ var playSE002_Button = function(storage){
     //}
 };
 
+var playSE003_Button = function(storage){
+    if(storage.seVolume != 0)
+    {
+        var audioEngine = cc.audioEngine;
+        audioEngine.playEffect(res.SE_003_mp3,false);
+    }
+};
+
+var playSE004_Button = function(storage){
+    if(storage.seVolume != 0)
+    {
+        var audioEngine = cc.audioEngine;
+        audioEngine.playEffect(res.SE_004_mp3,false);
+    }
+};
+
+var playSE005_Button = function(storage){
+    if(storage.seVolume != 0)
+    {
+        var audioEngine = cc.audioEngine;
+        audioEngine.playEffect(res.SE_005_mp3,false);
+    }
+};
+
 
 var playSE_Fail = function(storage){
     if(storage.seVolume != 0)

@@ -14,7 +14,7 @@ var CutIn = cc.Node.extend(
         this.effectTime = 0;
         this.game = game;
 
-        this.bgLayer = cc.LayerColor.create(new cc.Color(0, 0, 0, 255 * 0.2), 640, 1400);
+        this.bgLayer = cc.LayerColor.create(new cc.Color(0, 0, 0, 255 * 0.5), 640, 1400);
         this.addChild(this.bgLayer);
 
         //Himiko_png
@@ -22,7 +22,7 @@ var CutIn = cc.Node.extend(
         this.addChild(this.himikoSprite);
         this.himikoSprite.setPosition(600, this.game.viewSize.height / 2 - 70);
 
-        this.messageSprite = cc.Sprite.create(res.Message1_png);
+        this.messageSprite = cc.Sprite.create(res.Window_Message_png);
         this.messageSprite.setPosition(320,this.game.viewSize.height/2);
         this.addChild(this.messageSprite);
 
@@ -35,6 +35,13 @@ var CutIn = cc.Node.extend(
 
         var button = new cc.MenuItemImage(res.Info_Ok_Button_png, res.Info_Ok_Button_On_png, function() {
             this.setVisible(false);
+            playSE_Button(this.game.storage);
+            if(this.game.enemies.length > 0){
+                if(this.game.enemies[0].targetMarker){
+                    var _enemyMapId = this.game.enemies[0].targetMarker.mapId;
+                    this.game.mapManager.setPositionByMapChip(_enemyMapId);
+                }
+            }
         }, this);
         button.setPosition(320, 50);
         var menu = new cc.Menu(button);
@@ -42,10 +49,7 @@ var CutIn = cc.Node.extend(
         this.messageSprite.addChild(menu);
 
         this.setCutInVisible(false);
-/*
-        var _posY = this.game.header.getPosition().y - 250;
-        this.setPosition(0,_posY);
-*/
+
         this.tmpPosY = this.getPosition().y;
         this.spriteOpacity = 0;
 

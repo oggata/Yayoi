@@ -82,9 +82,9 @@ var Tutorial = cc.Node.extend(
     pageNext : function()
     {
         this.pageNum++;
-        if(this.pageNum>=6)
+        if(this.pageNum>=5)
         {
-            this.pageNum = 6;
+            this.pageNum = 5;
         }
 
         if(this.pageNum == 1)

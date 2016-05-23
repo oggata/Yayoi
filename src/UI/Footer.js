@@ -68,11 +68,8 @@ var Footer = cc.Node.extend({
                 this.game.shop.setVisible(false);
             } else {
                 this.game.shop.setVisible(true);
-                //setting
                 this.game.setting.setVisible(false);
-                //tutorial
                 this.game.tutorial.setVisible(false);
-                //level
                 this.game.lvManage.setVisible(false);
             }
             this.game.hasItemData = null;
@@ -85,7 +82,5 @@ var Footer = cc.Node.extend({
         this.footerNode.addChild(menu001);
     },
 
-    update: function() {
-
-    },
+    update: function() {},
 });

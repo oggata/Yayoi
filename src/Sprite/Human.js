@@ -7,44 +7,61 @@
 //
 
 var Human = cc.Node.extend({
-    ctor: function(game) {
+    ctor: function(game,type) {
         this._super();
         this.game = game;
+        this.type = type;
         this.humanId = getRandNumberFromRange(1, 9999999);
-        this.imgWidth = 70;
-        this.imgHeight = 90;
         this.icons = [];
         this.direction = "";
         this.walkingDirection = "";
         this.tmpWalkingDirection = "";
-        this._mostNearMarker = null;
-        this._mostNearDistance = 99999;
         this.walkSpeed = 1.5;
         this.route = [];
         var rand = getRandNumberFromRange(1, 3);
         this.image = res.Animal_001_png;
+        this.imgWidth = 70;
+        this.imgHeight = 90;
         if (rand == 2) {
             this.image = res.Animal_002_png;
+            this.imgWidth = 70;
+            this.imgHeight = 90;
+        }
+        if(this.type == 2)
+        {
+            this.image = res.Animal_003_png;
+            this.imgWidth = 233/3;
+            this.imgHeight = 700/7;
         }
         this.initializeWalkAnimation();
         this.startTime = 0;
         this.startMaxTime = getRandNumberFromRange(30, 30 * 15);
-        this.setVisible(false);
         this.isTrouble = 0;
-        //this.iconVisibleTime = 0;
-        this.currentTouchedMapId = null;
         this.isStop = false;
-        this.breakTime = 0;
         this.deadCnt = 0;
-
+        this.stopCount = 0;
         this.iconTime = 0;
         this.iconMaxTime = getRandNumberFromRange(30, 30 * 10);
+        this.setVisible(false);
+        this.targetMarker = null;
     },
 
     init: function() {},
 
     update: function() {
 
+        if(this.stopCount >= 1)
+        {
+            this.isStop = true;
+            this.stopCount++;
+            if(this.stopCount >= 30 * 2)
+            {
+                this.isStop = false;
+                this.stopCount = 0;
+            }
+        }
+
+        //死亡した場合の判定
         if (this.deadCnt >= 1) {
             this.deadCnt++;
             if (this.deadCnt >= 30 * CONFIG.PEOPLE_DEAD_SECOND) {
@@ -94,51 +111,23 @@ var Human = cc.Node.extend({
         if (this.route.length >= 1) {
             var target = null;
             if (this.game.mapChips[this.route[0] - 1]) {
+                //ターゲットになるマーカーは配列の一番若い番号 Array[0]
                 target = this.game.mapChips[this.route[0] - 1];
                 this.targetMarker = target;
                 if (this.game.mapChips[this.route[0] - 1].getPosition) {
                     var _targetX = this.game.mapChips[this.route[0] - 1].getPosition().x;
                     var _targetY = this.game.mapChips[this.route[0] - 1].getPosition().y;
                 }
+
+                //ターゲットが存在する場合は動く
                 if (target != null) {
                     this.moveToTargetMarker(target);
                     var dX = target.getPosition().x - this.getPosition().x;
                     var dY = target.getPosition().y + 108 / 2 - this.getPosition().y;
                     var dist = Math.sqrt(dX * dX + dY * dY);
+                    //ターゲットの中央に接近した場合の判定
                     if (dist <= 10) {
-
-                        var _foodMapChip = this.isIncludeMapChip(target.mapId)
-                        if (_foodMapChip != null && _foodMapChip.humanId == this.humanId) {
-                            if (this.currentTouchedMapId != target.mapId) {
-                                this.breakTime = 0;
-                                this.isStop = false;
-                            }
-                            this.breakTime++;
-                            if (this.breakTime >= 30 * 5) {
-                                this.breakTime = 0;
-                                this.isStop = false;
-                                _foodMapChip.isFoodAvailable = false;
-                                this.route.splice(0, 1);
-
-                                //存在する場合は食料を +1 する
-                                this.game.mapManager.food += _foodMapChip.itemData["food"];
-                                this.setEmotion("got_food");
-
-                                this.game.mapManager.foodDonePositions.push(target.mapId);
-                                this.game.mapManager.renderGauge();
-
-                            } else {
-                                this.isStop = true;
-                            }
-                        } else {
-                            this.breakTime = 0;
-                            this.isStop = false;
-                            this.route.splice(0, 1);
-                        }
-                        this.currentTouchedMapId = target.mapId;
-                    } else {
-                        this.breakTime = 0;
-                        this.isStop = false;
+                        this.route.splice(0, 1);
                     }
                 }
             }
@@ -146,26 +135,6 @@ var Human = cc.Node.extend({
             return false;
         }
         return true;
-    },
-
-    isIncludeMapChip: function(_localMapId) {
-        for (var i = 0; i < this.game.mapManager.foodPositions.length; i++) {
-            if (this.game.mapManager.foodPositions[i].mapId == _localMapId) {
-                if (this.game.mapManager.foodPositions[i].isFoodAvailable) {
-                    //this.game.mapManager.foodPositions[i].isFoodAvailable = false;
-                    if (this.game.mapManager.foodPositions[i].humanId == null) {
-                        this.game.mapManager.foodPositions[i].humanId = this.humanId;
-                    }
-                    this.game.mapManager.foodPositions[i].humanId = this.humanId;
-                    return this.game.mapManager.foodPositions[i];
-                    break;
-                } else {
-                    return null;
-                    break;
-                }
-            }
-        }
-        return null;
     },
 
     remove: function() {
@@ -212,7 +181,6 @@ var Human = cc.Node.extend({
                     this.getPosition().y + speedY
                 );
             }
-
         }
     },
 

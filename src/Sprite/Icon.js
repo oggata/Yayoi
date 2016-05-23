@@ -2,7 +2,6 @@ var Icon = cc.Node.extend({
     ctor: function(emotionType) {
         this._super();
         //this.game = game;
-
         var iconImage = "res/icon_good.png";
         if (emotionType == "need_food") {
             iconImage = "res/icon_bad.png";

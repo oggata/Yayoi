@@ -14,44 +14,43 @@ var SetBuilding = cc.Node.extend({
         this.mapChip = null;
         this.itemData = null;
 
-        //建物リセット用のwindow
-        this.base = cc.Sprite.create(res.Reset_png);
+        this.base = cc.Sprite.create(res.Window_Reset_png);
         this.base.setAnchorPoint(0.5, 0);
         this.addChild(this.base);
         this.setVisible(false);
 
-        var okButton = new cc.MenuItemImage(res.Build_Ok_Button, res.Build_Ok_Button, function() {
-            this.game.targetOkSprite.setVisible(false);
-            this.game.targetNgSprite.setVisible(false);
-            this.game.targetItem.setOpacity(0 * 255);
-            this.game.mapManager.amount -= this.itemData["amount"];
-            this.game.storage.setMapData(
-                this.game.hasItemData["id"],
-                this.mapChip.confNumber
-            );
+        var okButton = new cc.MenuItemImage(res.Button_Ok_png, res.Button_Ok_On_png, function() {
+            if(this.game.hasItemData["id"] && this.game.hasItemData["amount"])
+            {
+                if(this.game.isExistsItemKey(this.game.hasItemData["id"]) == true
+                    && this.game.hasItemData["amount"] > 0)
+                {
+                    this.game.mapManager.amount -= this.itemData["amount"];
+                    this.game.storage.setMapData(
+                        this.game.hasItemData["id"],
+                        this.mapChip.confNumber
+                    );
+                }
+            }
             this.game.hasItemData = null;
             this.game.isReadyToRenderMap = true;
             this.setVisible(false);
             playSE002_Button();
         }, this);
-        okButton.setPosition(-170 + 170 / 2, 70);
+        okButton.setPosition(-60, 45);
 
-        var ngButton = new cc.MenuItemImage(res.Build_Ng_Button, res.Build_Ng_Button, function() {
-            this.game.targetOkSprite.setVisible(false);
-            this.game.targetNgSprite.setVisible(false);
-            this.game.targetItem.setOpacity(0 * 255);
-            this.game.hasItemData = 0;
+        var ngButton = new cc.MenuItemImage(res.Button_Ng_png, res.Button_Ng_On_png, function() {
+            this.game.hasItemData = null;
             this.game.isReadyToRenderMap = true;
             this.setVisible(false);
         }, this);
-        ngButton.setPosition(0 + 170 / 2, 70);
+        ngButton.setPosition(60, 45);
 
-        this.messageLabel = cc.LabelTTF.create("", "Arial", 28);
+        this.messageLabel = cc.LabelTTF.create("", "Arial", 22);
         this.messageLabel.setFontFillColor(new cc.Color(0, 0, 0, 255));
-        this.messageLabel.enableStroke(new cc.Color(192, 192, 192, 255), 1, false);
         this.messageLabel.setAnchorPoint(0.5, 0.5);
         this.base.addChild(this.messageLabel);
-        this.messageLabel.setPosition(280, 200);
+        this.messageLabel.setPosition(200,120);
 
         var menu022 = new cc.Menu(okButton, ngButton);
         menu022.setPosition(0, 0);
@@ -60,7 +59,10 @@ var SetBuilding = cc.Node.extend({
 
     update: function() {
         if (this.game.hasItemData) {
+            this.game.targetItem.setOpacity(0.5 * 255);
             this.messageLabel.setString("この場所に「" + this.game.hasItemData["name"] + "」\nを建設します");
+        }else{
+            this.game.targetItem.setOpacity(0 * 255);
         }
     },
 });
